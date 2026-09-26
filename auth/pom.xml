@@ -60,6 +60,11 @@
 			<artifactId>mysql-connector-j</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>com.netzerohub</groupId>
+			<artifactId>common</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>
