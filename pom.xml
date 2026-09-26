@@ -29,6 +29,7 @@
         <module>discovery</module>
         <module>common</module>
         <module>apigateway</module>
+        <module>auth</module>
     </modules>
 
     <dependencyManagement>
