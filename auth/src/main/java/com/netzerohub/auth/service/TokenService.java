@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import com.netzerohub.auth.entity.AccountToken;
 import com.netzerohub.auth.repository.IAccountTokenRepository;
 import com.netzerohub.auth.util.JwtUtils;
-import com.netzerohub.common.enums.EAccountRole;
+import com.netzerohub.common.enums.AccountRole;
 import com.netzerohub.common.exception.BadRequestException;
 
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ public class TokenService {
     private final IAccountTokenRepository tokenRepository;
     private final JwtUtils jwtUtils;
 
-    public String genAndSaveRefreshToken(Integer accountId, EAccountRole accountRole) {
+    public String genAndSaveRefreshToken(Integer accountId, AccountRole accountRole) {
         AccountToken newAccountToken = new AccountToken();
 
         String token = jwtUtils.generateRefreshToken();
@@ -35,7 +35,7 @@ public class TokenService {
         return token;
     }
 
-    public String genAccessToken(Integer accountId, EAccountRole accountRole) {
+    public String genAccessToken(Integer accountId, AccountRole accountRole) {
         Map<String, Object> tokenPayload = new HashMap<>();
         tokenPayload.put("accountId", accountId);
         tokenPayload.put("role", accountRole);

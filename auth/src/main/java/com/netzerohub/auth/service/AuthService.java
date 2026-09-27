@@ -6,9 +6,11 @@ import org.springframework.stereotype.Service;
 
 import com.netzerohub.auth.dto.TokenPairDto;
 import com.netzerohub.auth.entity.Account;
+import com.netzerohub.auth.form.LoginForm;
 import com.netzerohub.auth.form.RegisterForm;
 import com.netzerohub.auth.repository.IAccountRepository;
 import com.netzerohub.auth.util.PasswordUtils;
+import com.netzerohub.common.enums.ErrorCode;
 import com.netzerohub.common.exception.BadRequestException;
 
 import lombok.RequiredArgsConstructor;
@@ -42,12 +44,16 @@ public class AuthService {
         return null;
     }
 
-    public TokenPairDto login(String email, String password) {
-        Account account = accountRepository.findOneByEmail(email)
-                .orElseThrow(() -> new BadRequestException("Invalid email or password"));
+    public TokenPairDto login(LoginForm form) {
+        Account account = accountRepository.findOneByEmail(form.getEmail())
+                .orElseThrow(() -> new BadRequestException(ErrorCode.AccountNotFound, "Invalid email or password"));
 
-        if (!passwordUtils.verifyPassword(password, account.getPassword())) {
-            throw new BadRequestException("Invalid email or password");
+        if (!passwordUtils.verifyPassword(form.getPassword(), account.getPassword())) {
+            throw new BadRequestException(ErrorCode.InvalidCredentials, "Invalid email or password");
+        }
+
+        if (!account.getIsVerified()) {
+            throw new BadRequestException(ErrorCode.AccountNotVerified, "Account is not verified");
         }
 
         String refreshToken = tokenService.genAndSaveRefreshToken(account.getId(), account.getRole());

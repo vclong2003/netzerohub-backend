@@ -3,7 +3,9 @@ package com.netzerohub.auth.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.netzerohub.auth.dto.TokenPairDto;
 import com.netzerohub.auth.entity.Account;
+import com.netzerohub.auth.form.LoginForm;
 import com.netzerohub.auth.form.RegisterForm;
 import com.netzerohub.auth.service.AuthService;
 
@@ -37,4 +39,11 @@ public class AuthController {
         authService.register(form);
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping("login")
+    public ResponseEntity<TokenPairDto> login(@RequestBody @Valid LoginForm form) {
+        TokenPairDto dto = authService.login(form);
+        return ResponseEntity.ok(dto);
+    }
+
 }

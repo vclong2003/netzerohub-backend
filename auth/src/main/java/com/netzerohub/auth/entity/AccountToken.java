@@ -8,7 +8,7 @@ import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.TimeToLive;
 import org.springframework.data.redis.core.index.Indexed;
 
-import com.netzerohub.common.enums.EAccountRole;
+import com.netzerohub.common.enums.AccountRole;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,7 +27,7 @@ public class AccountToken implements Serializable {
     @Indexed
     private Integer accountId;
 
-    private EAccountRole accountRole;
+    private AccountRole accountRole;
 
     private LocalDateTime createdAt = LocalDateTime.now();
 

@@ -7,7 +7,7 @@ import java.util.UUID;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.netzerohub.common.enums.EAccountRole;
+import com.netzerohub.common.enums.AccountRole;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -41,7 +41,10 @@ public class Account implements Serializable {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private EAccountRole role = EAccountRole.User;
+    private AccountRole role = AccountRole.User;
+
+    @Column(nullable = false)
+    private Boolean isVerified = false;
 
     @Column(unique = true, nullable = true)
     private String phone;

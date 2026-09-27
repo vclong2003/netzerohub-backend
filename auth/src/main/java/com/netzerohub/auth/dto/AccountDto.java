@@ -3,7 +3,7 @@ package com.netzerohub.auth.dto;
 import java.time.LocalDateTime;
 
 import com.netzerohub.auth.entity.Account;
-import com.netzerohub.common.enums.EAccountRole;
+import com.netzerohub.common.enums.AccountRole;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,7 +18,7 @@ public class AccountDto {
     private Integer id;
     private String code;
     private String email;
-    private EAccountRole role;
+    private AccountRole role;
     private String phone;
     private String firstName;
     private String lastName;
