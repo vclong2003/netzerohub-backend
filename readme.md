@@ -23,3 +23,11 @@ eureka dashboard: http://localhost:4000
 ##### Notes
 
 - added resources/META-INF in common config to auto load modules
+
+#### Redis
+
+```
+docker exec -it NetZeroHub-Redis redis-cli
+AUTH <password>
+KEYS *
+```
