@@ -62,4 +62,9 @@ public class AuthService {
         return new TokenPairDto(refreshToken, accessToken);
     }
 
+    public TokenPairDto refreshAccessToken(String refreshToken) {
+        String newAccessToken = tokenService.refreshAccessToken(refreshToken);
+        return new TokenPairDto(null, newAccessToken);
+    }
+
 }

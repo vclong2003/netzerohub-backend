@@ -1,6 +1,7 @@
 package com.netzerohub.auth.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.netzerohub.auth.dto.TokenPairDto;
@@ -11,7 +12,6 @@ import com.netzerohub.auth.service.AuthService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 
@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@Slf4j
 @RestController
 @RequestMapping("/api/auth")
 @CrossOrigin("*")
@@ -34,7 +33,7 @@ public class AuthController {
         return ResponseEntity.ok(authService.getAllAccounts());
     }
 
-    @PostMapping("/register")
+    @PostMapping("register")
     public ResponseEntity<Void> register(@RequestBody @Valid RegisterForm form) {
         authService.register(form);
         return ResponseEntity.ok().build();
@@ -46,4 +45,9 @@ public class AuthController {
         return ResponseEntity.ok(dto);
     }
 
+    @GetMapping("refresh")
+    public ResponseEntity<TokenPairDto> refreshAccessToken(@RequestParam String refreshToken) {
+        TokenPairDto dto = authService.refreshAccessToken(refreshToken);
+        return ResponseEntity.ok(dto);
+    }
 }
