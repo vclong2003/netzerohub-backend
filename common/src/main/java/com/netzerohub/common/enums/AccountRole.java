@@ -1,5 +1,5 @@
 package com.netzerohub.common.enums;
 
-public enum EAccountRole {
+public enum AccountRole {
     User, Admin
 }

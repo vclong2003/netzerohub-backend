@@ -1,1 +1,2 @@
 com.netzerohub.common.exception.GlobalExceptionHandler
+com.netzerohub.common.config.CommonWebConfig
