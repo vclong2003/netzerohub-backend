@@ -4,13 +4,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.netzerohub.auth.entity.Account;
+import com.netzerohub.auth.form.RegisterForm;
 import com.netzerohub.auth.service.AuthService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -31,15 +32,9 @@ public class AuthController {
         return ResponseEntity.ok(authService.getAllAccounts());
     }
 
-    @PostMapping("")
-    public ResponseEntity<Void> testCreateAccount(@RequestBody Map<String, Object> body) {
-        String email = (String) body.get("email");
-        String password = (String) body.get("password");
-        String firstName = (String) body.get("firstName");
-        String lastName = (String) body.get("lastName");
-
-        authService.createAccount(email, password, firstName, lastName);
+    @PostMapping("/register")
+    public ResponseEntity<Void> register(@RequestBody @Valid RegisterForm form) {
+        authService.register(form);
         return ResponseEntity.ok().build();
     }
-
 }
