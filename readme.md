@@ -13,3 +13,21 @@ notification: 4004
 storage: 4005
 
 eureka dashboard: http://localhost:4000
+
+### From root run these:
+
+- `mvn clean install -pl common` to re-install common module to cache
+- `mvn spring-boot:run -pl <module name>` to run a module, e.g. `mvn spring-boot:run -pl auth`
+- If we want to run multiple modules, we can use `mvn spring-boot:run -pl <module1>,<module2>`, e.g. `mvn spring-boot:run -pl auth,notification`
+
+##### Notes
+
+- added resources/META-INF in common config to auto load modules
+
+#### Redis
+
+```
+docker exec -it NetZeroHub-Redis redis-cli
+AUTH <password>
+KEYS *
+```

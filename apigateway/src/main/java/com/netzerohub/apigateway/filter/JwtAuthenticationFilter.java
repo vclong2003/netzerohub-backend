@@ -1,0 +1,82 @@
+package com.netzerohub.apigateway.filter;
+
+import java.io.IOException;
+
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import com.netzerohub.apigateway.config.SecurityProperties;
+import com.netzerohub.apigateway.dto.TokenPayloadDto;
+import com.netzerohub.apigateway.lib.CustomRequestWrapper;
+import com.netzerohub.apigateway.util.JwtUtils;
+
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Component
+@RequiredArgsConstructor
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
+    private final JwtUtils jwtUtils;
+    private final SecurityProperties securityProperties;
+    private final AntPathMatcher pathMatcher = new AntPathMatcher();
+
+    private boolean isExcluded(String path) {
+        if (securityProperties.exclude() == null ||
+                securityProperties.exclude().routes() == null) {
+            return false;
+        }
+        return securityProperties.exclude().routes().stream()
+                .anyMatch(route -> pathMatcher.match(route, path));
+    }
+
+    private String extractHeaderToken(HttpServletRequest request) {
+        String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return null;
+        }
+        return authHeader.substring(7);
+    }
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request,
+            HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
+
+        String path = request.getRequestURI();
+        if (isExcluded(path)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        String token = extractHeaderToken(request);
+        if (token == null) {
+            log.warn("Auth header is invalid or not present");
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            return;
+        }
+
+        TokenPayloadDto payload = null;
+        try {
+            payload = jwtUtils.extractTokenPayload(token);
+        } catch (Exception e) {
+            log.warn("Access token is invalid or expired", e);
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            return;
+        }
+
+        CustomRequestWrapper requestWrapper = new CustomRequestWrapper(request);
+        requestWrapper.addHeader("X-Account-Id", payload.getAccountId());
+        requestWrapper.addHeader("X-Account-Role", payload.getRole().name());
+
+        filterChain.doFilter(requestWrapper, response);
+    }
+
+}

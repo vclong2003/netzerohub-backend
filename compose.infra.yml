@@ -16,3 +16,8 @@ services:
       MYSQL_ROOT_PASSWORD: ${AUTH_DB__PASSWORD}
     ports:
       - "${AUTH_DB__PORT}:3306"
+    volumes:
+      - auth_db_data:/var/lib/mysql
+
+volumes:
+  auth_db_data:
