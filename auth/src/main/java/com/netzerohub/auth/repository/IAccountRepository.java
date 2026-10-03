@@ -9,5 +9,7 @@ import com.netzerohub.auth.entity.Account;
 public interface IAccountRepository extends JpaRepository<Account, Integer> {
     public Optional<Account> findOneByEmail(String email);
 
+    public Optional<Account> findOneByCode(String code);
+
     public boolean existsByEmail(String email);
 }

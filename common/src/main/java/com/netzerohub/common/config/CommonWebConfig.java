@@ -7,7 +7,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.netzerohub.common.interceptor.RoleAuthInterceptor;
-import com.netzerohub.common.interceptor.UserContextInterceptor;
+import com.netzerohub.common.interceptor.RequestContextInterceptor;
 
 import lombok.RequiredArgsConstructor;
 
@@ -16,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 @ConditionalOnWebApplication
 @RequiredArgsConstructor
 public class CommonWebConfig implements WebMvcConfigurer {
-    private final UserContextInterceptor userContextInterceptor;
+    private final RequestContextInterceptor userContextInterceptor;
     private final RoleAuthInterceptor roleAuthInterceptor;
 
     @Override

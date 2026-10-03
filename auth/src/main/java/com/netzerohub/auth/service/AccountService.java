@@ -18,4 +18,9 @@ public class AccountService {
         return accountRepository.findById(accountId)
                 .orElseThrow(() -> new BadRequestException(ErrorCode.AccountNotFound, "Account not found"));
     }
+
+    public Account getAccountByCode(String code) {
+        return accountRepository.findOneByCode(code)
+                .orElseThrow(() -> new BadRequestException(ErrorCode.AccountNotFound, "Account not found"));
+    }
 }
