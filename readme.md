@@ -30,8 +30,21 @@ eureka dashboard: http://localhost:4000
 
 #### Redis
 
-```
+```bash
 docker exec -it NetZeroHub-Redis redis-cli
 AUTH <password>
 KEYS *
+```
+
+#### RabbitMQ
+
+```bash
+# create a new user
+rabbitmqctl add_user netzerohub your_secure_password
+
+# grant full permissions
+rabbitmqctl set_permissions -p "/" netzerohub ".*" ".*" ".*"
+
+# set this tag to access ui if needed
+rabbitmqctl set_user_tags netzerohub management
 ```
