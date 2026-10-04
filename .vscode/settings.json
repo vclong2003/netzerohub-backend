@@ -4,7 +4,8 @@
     "Configurer",
     "Jwts",
     "netzerohub",
-    "rustfs"
+    "rustfs",
+    "springdoc"
   ],
   "java.configuration.updateBuildConfiguration": "automatic"
 }
