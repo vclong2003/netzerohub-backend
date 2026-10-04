@@ -14,13 +14,14 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AccountDto {
-    protected Integer id;
-    protected String code;
-    protected String email;
-    protected AccountRole role;
-    protected String phone;
-    protected String firstName;
-    protected String lastName;
-    protected LocalDateTime createdAt;
-    protected LocalDateTime updatedAt;
+    private Integer id;
+    private String code;
+    private String email;
+    private AccountRole role;
+    private String phone;
+    private String firstName;
+    private String lastName;
+    private String avatarUrl;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }
