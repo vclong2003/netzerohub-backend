@@ -31,6 +31,7 @@
         <module>apigateway</module>
         <module>auth</module>
         <module>notification</module>
+        <module>storage</module>
     </modules>
 
     <dependencyManagement>
