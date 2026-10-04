@@ -19,6 +19,7 @@ notification-db: 3012
 storage: 4005
 
 eureka dashboard: http://localhost:4000
+swagger: http://localhost:4002/swagger-ui/index.html
 
 - to do if possible: payment
 
