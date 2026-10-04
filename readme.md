@@ -2,7 +2,7 @@ dev server: 146.235.22.194
 
 redis: 3310
 rabbitMQ: 3313 (AMQP), 3314 (UI)
-rustFS: 4053, 4054
+rustFS: 3315 (S3 api), 3316 (UI)
 
 config: 4000
 discovery: 4001

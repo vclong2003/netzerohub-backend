@@ -21,6 +21,24 @@ services:
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
 
+  rustfs:
+    image: rustfs/rustfs:1.0.1
+    container_name: NetZeroHub-RustFS
+    restart: unless-stopped
+    command: /data
+    ports:
+      - "${RUSTFS__API_PORT}:9000"
+      - "${RUSTFS__CONSOLE_PORT}:9001"
+    environment:
+      RUSTFS_ACCESS_KEY: ${RUSTFS__ACCESS_KEY}
+      RUSTFS_SECRET_KEY: ${RUSTFS__SECRET_KEY}
+      RUSTFS_ADDRESS: ":9000"
+      RUSTFS_CONSOLE_ADDRESS: ":9001"
+      RUSTFS_CONSOLE_ENABLE: "true"
+      RUSTFS_CONSOLE_CORS_ALLOWED_ORIGINS: "*"
+    volumes:
+      - rustfs_data:/data
+
   auth-db:
     image: mysql/mysql-server:8.0.25
     container_name: NetZeroHub-Auth-DB
@@ -47,5 +65,6 @@ services:
 
 volumes:
   rabbitmq_data:
+  rustfs_data:
   auth_db_data:
   notification_db_data:
