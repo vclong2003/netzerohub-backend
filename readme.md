@@ -1,5 +1,7 @@
-redis: 4050
-rabbitMQ: 4051,4052
+dev server: 146.235.22.194
+
+redis: 3310
+rabbitMQ: 3313 (AMQP), 3314 (UI)
 rustFS: 4053, 4054
 
 config: 4000
@@ -7,9 +9,11 @@ discovery: 4001
 api-gateway: 4002
 
 auth: 4003
-auth-db: 3010
+auth-db: 3011
 
 notification: 4004
+notification-db: 3012
+
 storage: 4005
 
 eureka dashboard: http://localhost:4000
