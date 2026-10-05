@@ -36,6 +36,9 @@ public class Account implements Serializable {
     @Column(unique = true, nullable = false)
     private String email;
 
+    @Column(nullable = true)
+    private String avatarUrl;
+
     @Column(nullable = false)
     private String password;
 

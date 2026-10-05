@@ -22,6 +22,7 @@
     <properties>
         <java.version>25</java.version>
         <spring-cloud.version>2025.1.3</spring-cloud.version>
+        <springdoc.version>2.8.5</springdoc.version>
     </properties>
 
     <modules>
@@ -30,6 +31,8 @@
         <module>common</module>
         <module>apigateway</module>
         <module>auth</module>
+        <module>notification</module>
+        <module>storage</module>
     </modules>
 
     <dependencyManagement>
@@ -46,6 +49,12 @@
                 <groupId>com.netzerohub</groupId>
                 <artifactId>common</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+                <version>${springdoc.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

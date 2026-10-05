@@ -7,12 +7,20 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.netzerohub.auth.dto.AccountDto;
 import com.netzerohub.auth.entity.Account;
+import com.netzerohub.auth.form.UpdateAccountForm;
 import com.netzerohub.auth.service.AccountService;
-import com.netzerohub.common.context.AccountContext;
+import com.netzerohub.common.context.RequestContext;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
+import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
+@Slf4j
 @RestController
 @RequestMapping("/api/account")
 @CrossOrigin("*")
@@ -22,10 +30,28 @@ public class AccountController {
 
     @GetMapping("me")
     public ResponseEntity<AccountDto> getCurrentAccount() {
-        AccountContext ctx = AccountContext.get();
-
+        RequestContext ctx = RequestContext.get();
         Account account = accountService.getAccountById(ctx.getAccountId());
-
         return ResponseEntity.ok(new AccountDto(account));
     }
+
+    @PutMapping("me")
+    public ResponseEntity<AccountDto> updateCurrentAccount(@Valid @RequestBody UpdateAccountForm form) {
+        RequestContext ctx = RequestContext.get();
+        Account account = accountService.updateAccount(ctx.getAccountId(), form);
+        return ResponseEntity.ok(new AccountDto(account));
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<AccountDto> getAccountById(@PathVariable("id") Integer id) {
+        Account account = accountService.getAccountById(id);
+        return ResponseEntity.ok(new AccountDto(account));
+    }
+
+    @GetMapping("code/{code}")
+    public ResponseEntity<AccountDto> getAccountByCode(@PathVariable("code") String code) {
+        Account account = accountService.getAccountByCode(code);
+        return ResponseEntity.ok(new AccountDto(account));
+    }
+
 }

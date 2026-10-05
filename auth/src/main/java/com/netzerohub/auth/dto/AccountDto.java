@@ -22,6 +22,7 @@ public class AccountDto {
     private String phone;
     private String firstName;
     private String lastName;
+    private String avatarUrl;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -33,6 +34,7 @@ public class AccountDto {
         this.phone = entity.getPhone();
         this.firstName = entity.getFirstName();
         this.lastName = entity.getLastName();
+        this.avatarUrl = entity.getAvatarUrl();
         this.createdAt = entity.getCreatedAt();
         this.updatedAt = entity.getUpdatedAt();
     }

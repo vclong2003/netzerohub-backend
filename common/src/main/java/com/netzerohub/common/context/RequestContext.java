@@ -11,17 +11,18 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AccountContext {
+public class RequestContext {
     private Integer accountId;
     private AccountRole accountRole;
+    private Boolean isInternalRequest;
 
-    private static final ThreadLocal<AccountContext> CONTEXT = new ThreadLocal<>();
+    private static final ThreadLocal<RequestContext> CONTEXT = new ThreadLocal<>();
 
-    public static void set(AccountContext context) {
+    public static void set(RequestContext context) {
         CONTEXT.set(context);
     }
 
-    public static AccountContext get() {
+    public static RequestContext get() {
         return CONTEXT.get();
     }
 

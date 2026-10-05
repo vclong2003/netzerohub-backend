@@ -1,4 +1,13 @@
 {
-  "cSpell.words": ["configserver", "Configurer", "Jwts", "netzerohub"],
+  "cSpell.words": [
+    "configserver",
+    "Configurer",
+    "Dskip",
+    "Jwts",
+    "netzerohub",
+    "rustfs",
+    "springdoc",
+    "temurin"
+  ],
   "java.configuration.updateBuildConfiguration": "automatic"
 }

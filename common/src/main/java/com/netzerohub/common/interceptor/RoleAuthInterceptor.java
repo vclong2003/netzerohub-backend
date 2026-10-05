@@ -7,7 +7,7 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import com.netzerohub.common.annotation.RequireRole;
-import com.netzerohub.common.context.AccountContext;
+import com.netzerohub.common.context.RequestContext;
 import com.netzerohub.common.enums.AccountRole;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -36,7 +36,7 @@ public class RoleAuthInterceptor implements HandlerInterceptor {
             return true;
         }
 
-        AccountContext currentContext = AccountContext.get();
+        RequestContext currentContext = RequestContext.get();
         if (currentContext == null || currentContext.getAccountRole() == null) { // check if user context have data
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return false;
