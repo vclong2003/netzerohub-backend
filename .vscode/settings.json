@@ -2,10 +2,12 @@
   "cSpell.words": [
     "configserver",
     "Configurer",
+    "Dskip",
     "Jwts",
     "netzerohub",
     "rustfs",
-    "springdoc"
+    "springdoc",
+    "temurin"
   ],
   "java.configuration.updateBuildConfiguration": "automatic"
 }

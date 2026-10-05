@@ -1,0 +1,72 @@
+services:
+  config:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        MODULE: config
+    container_name: NetZeroHub-Config
+    volumes:
+      - ./config/config-repo:/app/config-repo
+    network_mode: host
+    restart: unless-stopped
+
+  discovery:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        MODULE: discovery
+    container_name: NetZeroHub-Discovery
+    network_mode: host
+    restart: unless-stopped
+    depends_on:
+      - config
+
+  apigateway:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        MODULE: apigateway
+    container_name: NetZeroHub-Gateway
+    network_mode: host
+    restart: unless-stopped
+    depends_on:
+      - config
+
+  auth:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        MODULE: auth
+    container_name: NetZeroHub-Auth
+    network_mode: host
+    restart: unless-stopped
+    depends_on:
+      - config
+
+  storage:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        MODULE: storage
+    container_name: NetZeroHub-Storage
+    network_mode: host
+    restart: unless-stopped
+    depends_on:
+      - config
+
+  notification:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        MODULE: notification
+    container_name: NetZeroHub-Notification
+    network_mode: host
+    restart: unless-stopped
+    depends_on:
+      - config

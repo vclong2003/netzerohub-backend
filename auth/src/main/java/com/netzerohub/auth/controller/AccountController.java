@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @Slf4j
@@ -35,7 +35,7 @@ public class AccountController {
         return ResponseEntity.ok(new AccountDto(account));
     }
 
-    @PostMapping("me")
+    @PutMapping("me")
     public ResponseEntity<AccountDto> updateCurrentAccount(@Valid @RequestBody UpdateAccountForm form) {
         RequestContext ctx = RequestContext.get();
         Account account = accountService.updateAccount(ctx.getAccountId(), form);
