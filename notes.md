@@ -21,6 +21,7 @@ storage: 4005
 eureka dashboard: http://localhost:4000
 swagger: http://localhost:4002/swagger-ui/index.html
 
+- to do: implement storage files url retrieval in backend
 - to do if possible: payment
 
 #### From root run these:
