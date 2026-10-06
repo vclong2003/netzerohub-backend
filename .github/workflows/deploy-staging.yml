@@ -9,10 +9,6 @@ jobs:
   deploy:
     runs-on: [self-hosted, staging]
 
-    defaults:
-      run:
-        working-directory: /home/vclong2003/Workspace/netzerohub-backend
-
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v7
