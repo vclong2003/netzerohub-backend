@@ -5,7 +5,7 @@ COPY . .
 
 ARG MODULE
 
-RUN mvn clean package -pl :${MODULE} -am -DskipTests
+RUN mvn clean package -pl :${MODULE} -am -DskipTests --quiet -Dorg.slf4j.simpleLogger.defaultLogLevel=ERROR
 
 
 FROM eclipse-temurin:25-jre-alpine
