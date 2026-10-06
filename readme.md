@@ -1,5 +1,7 @@
 # NetZeroHub Backend
 
+- Deployed: <https://netzero-api.vclab.uk/swagger-ui/index.html>
+
 ## Architecture
 
 The current backend consists of these modules:
