@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import com.netzerohub.common.config.FeignConfig;
 import com.netzerohub.common.dto.AccountDto;
 
-@FeignClient(name = "account-service", path = "/api/account", configuration = FeignConfig.class)
-public interface IAccountClient {
+@FeignClient(name = "auth", path = "/api/account", configuration = FeignConfig.class)
+public interface IAuthClient {
     @GetMapping("{id}")
     AccountDto getAccountById(@PathVariable Integer id);
 
