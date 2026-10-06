@@ -2,3 +2,4 @@
 .env.*
 # Do NOT ignore the example template
 !.env.example
+.DS_Store
