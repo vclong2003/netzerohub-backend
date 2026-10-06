@@ -22,7 +22,7 @@ services:
         MODULE: discovery
     container_name: NetZeroHub-Discovery
     environment:
-      - SPRING_CONFIG_IMPORT=configserver:http://config:4000
+      - SPRING_CLOUD_CONFIG_URI=http://config:4000
     networks:
       - netzerohub-net
     restart: unless-stopped
@@ -37,7 +37,7 @@ services:
         MODULE: apigateway
     container_name: NetZeroHub-Gateway
     environment:
-      - SPRING_CONFIG_IMPORT=configserver:http://config:4000
+      - SPRING_CLOUD_CONFIG_URI=http://config:4000
     networks:
       - netzerohub-net
     restart: unless-stopped
@@ -52,7 +52,7 @@ services:
         MODULE: auth
     container_name: NetZeroHub-Auth
     environment:
-      - SPRING_CONFIG_IMPORT=configserver:http://config:4000
+      - SPRING_CLOUD_CONFIG_URI=http://config:4000
     networks:
       - netzerohub-net
     restart: unless-stopped
@@ -67,7 +67,7 @@ services:
         MODULE: storage
     container_name: NetZeroHub-Storage
     environment:
-      - SPRING_CONFIG_IMPORT=configserver:http://config:4000
+      - SPRING_CLOUD_CONFIG_URI=http://config:4000
     networks:
       - netzerohub-net
     restart: unless-stopped
@@ -82,7 +82,7 @@ services:
         MODULE: notification
     container_name: NetZeroHub-Notification
     environment:
-      - SPRING_CONFIG_IMPORT=configserver:http://config:4000
+      - SPRING_CLOUD_CONFIG_URI=http://config:4000
     networks:
       - netzerohub-net
     restart: unless-stopped
