@@ -37,10 +37,10 @@ services:
         MODULE: apigateway
     container_name: NetZeroHub-Gateway
     environment:
-      - SERVER_PORT=4002
+      - SERVER_PORT=8080
       - CONFIG_SERVER_URL=http://config:4000
     ports:
-      - "4000:4002"
+      - "4000:8080"
     networks:
       - netzerohub-net
     restart: unless-stopped
