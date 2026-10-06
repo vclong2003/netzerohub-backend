@@ -9,7 +9,7 @@ services:
     environment:
       - SERVER_PORT=4000
     volumes:
-      - ./configs:/app/config-repo
+      - /home/vclong2003/Workspace/netzerohub-backend/configs:/app/config-repo
     networks:
       - netzerohub-net
     restart: unless-stopped
