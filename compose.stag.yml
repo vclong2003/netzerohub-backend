@@ -1,0 +1,94 @@
+services:
+  config:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        MODULE: config
+    container_name: NetZeroHub-Config
+    environment:
+      - SERVER_PORT=4000
+    volumes:
+      - ./configs:/app/config-repo
+    networks:
+      - netzerohub-net
+    restart: unless-stopped
+
+  discovery:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        MODULE: discovery
+    container_name: NetZeroHub-Discovery
+    environment:
+      - SPRING_CONFIG_IMPORT=configserver:http://config:4000
+    networks:
+      - netzerohub-net
+    restart: unless-stopped
+    depends_on:
+      - config
+
+  apigateway:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        MODULE: apigateway
+    container_name: NetZeroHub-Gateway
+    environment:
+      - SPRING_CONFIG_IMPORT=configserver:http://config:4000
+    networks:
+      - netzerohub-net
+    restart: unless-stopped
+    depends_on:
+      - config
+
+  auth:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        MODULE: auth
+    container_name: NetZeroHub-Auth
+    environment:
+      - SPRING_CONFIG_IMPORT=configserver:http://config:4000
+    networks:
+      - netzerohub-net
+    restart: unless-stopped
+    depends_on:
+      - config
+
+  storage:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        MODULE: storage
+    container_name: NetZeroHub-Storage
+    environment:
+      - SPRING_CONFIG_IMPORT=configserver:http://config:4000
+    networks:
+      - netzerohub-net
+    restart: unless-stopped
+    depends_on:
+      - config
+
+  notification:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        MODULE: notification
+    container_name: NetZeroHub-Notification
+    environment:
+      - SPRING_CONFIG_IMPORT=configserver:http://config:4000
+    networks:
+      - netzerohub-net
+    restart: unless-stopped
+    depends_on:
+      - config
+
+networks:
+  netzerohub-net:
+    driver: bridge
