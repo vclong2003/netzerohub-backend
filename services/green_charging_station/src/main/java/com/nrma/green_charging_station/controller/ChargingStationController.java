@@ -2,7 +2,6 @@ package com.nrma.green_charging_station.controller;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,7 +29,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("api/green-charging-stations")
-@CrossOrigin("*")
 @RequiredArgsConstructor
 public class ChargingStationController {
     private final ChargingStationService chargingStationService;
