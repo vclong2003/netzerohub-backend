@@ -33,6 +33,7 @@
         <module>auth</module>
         <module>notification</module>
         <module>storage</module>
+        <module>services/green_charging_station</module>
     </modules>
 
     <dependencyManagement>

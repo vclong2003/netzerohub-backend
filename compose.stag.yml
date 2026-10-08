@@ -4,7 +4,8 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        MODULE: config
+        MODULE_ID: config
+        MODULE_LOCATION: config
     container_name: NetZeroHub-Config
     environment:
       - SERVER_PORT=4000
@@ -19,7 +20,8 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        MODULE: discovery
+        MODULE_ID: discovery
+        MODULE_LOCATION: discovery
     container_name: NetZeroHub-Discovery
     environment:
       - CONFIG_SERVER_URL=http://config:4000
@@ -34,7 +36,8 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        MODULE: apigateway
+        MODULE_ID: apigateway
+        MODULE_LOCATION: apigateway
     container_name: NetZeroHub-Gateway
     environment:
       - SERVER_PORT=8080
@@ -52,7 +55,8 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        MODULE: auth
+        MODULE_ID: auth
+        MODULE_LOCATION: auth
     container_name: NetZeroHub-Auth
     environment:
       - CONFIG_SERVER_URL=http://config:4000
@@ -67,7 +71,8 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        MODULE: storage
+        MODULE_ID: storage
+        MODULE_LOCATION: storage
     container_name: NetZeroHub-Storage
     environment:
       - CONFIG_SERVER_URL=http://config:4000
@@ -82,8 +87,25 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        MODULE: notification
+        MODULE_ID: notification
+        MODULE_LOCATION: notification
     container_name: NetZeroHub-Notification
+    environment:
+      - CONFIG_SERVER_URL=http://config:4000
+    networks:
+      - netzerohub-net
+    restart: unless-stopped
+    depends_on:
+      - config
+
+  green_charging_station:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        MODULE_ID: green_charging_station
+        MODULE_LOCATION: services/green_charging_station
+    container_name: NetZeroHub-GreenChargingStation
     environment:
       - CONFIG_SERVER_URL=http://config:4000
     networks:
