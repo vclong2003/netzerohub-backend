@@ -12,7 +12,7 @@ The current backend consists of these modules:
 | `discovery`    | Eureka service registry. Services register here and the API Gateway uses it for service discovery.                                 |     `4001` |
 | `apigateway`   | Single entry point for front-end requests, JWT validation, routing, and OpenAPI aggregation.                                       |     `4002` |
 | `auth`         | Account registration, verification, login, token refresh, and account operations.                                                  |     `4003` |
-| `notification` | Notification processing. Notifications can be sent through email/other providers or stored so users can view notification history. |     `4004` |
+| `notification` | Notification processing. Notifications can be sent through email/other providers.                                                  |     `4004` |
 | `storage`      | File upload and URL generation through the S3-compatible object storage service.                                                   |     `4005` |
 | `common`       | Shared Java code used by the other modules; it is not a separately running service.                                                |          - |
 
@@ -45,10 +45,8 @@ Do not send requests from the front end directly to `auth`, `notification`, or
 ### Notification service
 
 The notification service consumes notification events and supports notification
-delivery through configured providers such as email/OneSignal. It also persists
-notifications in its database so notification history can be displayed to users.
-The service uses RabbitMQ on the development server for asynchronous notification
-processing.
+delivery through configured providers such as email/OneSignal. The service uses 
+RabbitMQ on the development server for asynchronous notification processing.
 
 ### Storage service
 
@@ -64,7 +62,7 @@ on the development server. The current upload limits are 25 MB per file and
 ├── apigateway/       # API Gateway
 ├── auth/             # Authentication and account service
 ├── common/           # Shared library
-├── config/            # Config Server
+├── config/           # Config Server
 │   └── config-repo/  # Shared and service configuration
 ├── discovery/        # Eureka service registry
 ├── notification/     # Notification service
