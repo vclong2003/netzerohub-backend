@@ -16,3 +16,9 @@ jobs:
       - name: Build and Start Containers
         run: |
           docker compose -f compose.stag.yml up -d --build
+
+      - name: Cleanup Docker Artifacts
+        if: always()
+        run: |
+          docker image prune -f
+          docker builder prune -f --filter "until=24h" --keep-storage 4GB
