@@ -21,4 +21,4 @@ jobs:
         if: always()
         run: |
           docker image prune -f
-          docker builder prune -f --filter "until=24h" --keep-storage 4GB
+          docker builder prune -f --filter "until=24h" --reserved-space 4GB
