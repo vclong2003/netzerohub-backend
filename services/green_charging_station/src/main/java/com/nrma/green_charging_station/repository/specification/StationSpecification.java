@@ -19,8 +19,10 @@ public class StationSpecification {
             List<Predicate> predicates = new ArrayList<>();
 
             // name
-            if (form.getName() != null && !form.getName().isEmpty()) {
-                predicates.add(criteriaBuilder.like(root.get("name"), "%" + form.getName() + "%"));
+            if (form.getName() != null && !form.getName().trim().isEmpty()) {
+                predicates.add(criteriaBuilder.like(
+                        criteriaBuilder.lower(root.get("name")),
+                        "%" + form.getName().trim().toLowerCase() + "%"));
             }
 
             // status
@@ -56,7 +58,8 @@ public class StationSpecification {
                 predicates.add(criteriaBuilder.exists(subquery));
             }
 
-            return criteriaBuilder.conjunction();
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+
         };
     }
 }

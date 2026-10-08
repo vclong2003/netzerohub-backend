@@ -76,5 +76,118 @@ sudo iptables -L --line-numbers
 sudo iptables -D INPUT 1
 ```
 
- <!-- test action -->
- <!-- test action 1 -->
+### Mock Charging station
+
+- Around UOW
+  ```JSON
+  [
+    {
+        "name": "NRMA Green Station - UOW Northfields Ave P1",
+        "latitude": -34.406150,
+        "longitude": 150.878720,
+        "renewableEnergyPercent": 100
+    },
+    {
+        "name": "NRMA Green Station - UOW Western Carpark P4",
+        "latitude": -34.403820,
+        "longitude": 150.873210,
+        "renewableEnergyPercent": 85
+    },
+    {
+        "name": "NRMA Green Station - UOW Innovation Campus",
+        "latitude": -34.398050,
+        "longitude": 150.902480,
+        "renewableEnergyPercent": 90
+    },
+    {
+        "name": "NRMA Green Station - North Wollongong Station",
+        "latitude": -34.413240,
+        "longitude": 150.894390,
+        "renewableEnergyPercent": 75
+    },
+    {
+        "name": "NRMA Green Station - Wollongong Central",
+        "latitude": -34.425120,
+        "longitude": 150.893180,
+        "renewableEnergyPercent": 60
+    }
+  ]
+  ```
+- Sydney Metro
+
+  ```JSON
+  [
+    {
+        "name": "NRMA Green Station - Sydney CBD (Haymarket)",
+        "latitude": -33.882950,
+        "longitude": 151.206480,
+        "renewableEnergyPercent": 50
+    },
+    {
+        "name": "NRMA Green Station - Circular Quay",
+        "latitude": -33.856800,
+        "longitude": 151.215300,
+        "renewableEnergyPercent": 65
+    },
+    {
+        "name": "NRMA Green Station - Sydney Olympic Park",
+        "latitude": -33.847520,
+        "longitude": 151.063410,
+        "renewableEnergyPercent": 95
+    },
+    {
+        "name": "NRMA Green Station - Parramatta Square",
+        "latitude": -33.815030,
+        "longitude": 151.001140,
+        "renewableEnergyPercent": 80
+    },
+    {
+        "name": "NRMA Green Station - Bondi Beach Pavilion",
+        "latitude": -33.891470,
+        "longitude": 151.276680,
+        "renewableEnergyPercent": 70
+    }
+  ]
+  ```
+
+- Regional NSW
+  ```JSON
+  [
+    {
+        "name": "NRMA Green Station - Berry (Princes Hwy)",
+        "latitude": -34.776100,
+        "longitude": 150.697800,
+        "renewableEnergyPercent": 100
+    },
+    {
+        "name": "NRMA Green Station - Goulburn (Hume Hwy / Big Merino)",
+        "latitude": -34.775820,
+        "longitude": 149.694530,
+        "renewableEnergyPercent": 85
+    },
+    {
+        "name": "NRMA Green Station - Katoomba (Blue Mountains)",
+        "latitude": -33.712610,
+        "longitude": 150.311900,
+        "renewableEnergyPercent": 90
+    },
+    {
+        "name": "NRMA Green Station - Batemans Bay Foreshore",
+        "latitude": -35.707740,
+        "longitude": 150.178320,
+        "renewableEnergyPercent": 80
+    },
+    {
+        "name": "NRMA Green Station - Newcastle Foreshore",
+        "latitude": -32.926710,
+        "longitude": 151.776500,
+        "renewableEnergyPercent": 75
+    },
+    {
+        "name": "NRMA Green Station - Dubbo Visitor Hub",
+        "latitude": -32.247530,
+        "longitude": 148.601520,
+        "renewableEnergyPercent": 100
+    }
+  ]
+  ```
