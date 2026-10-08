@@ -1,7 +1,6 @@
 package com.netzerohub.auth.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 @Slf4j
 @RestController
 @RequestMapping("/api/account")
-@CrossOrigin("*")
 @RequiredArgsConstructor
 public class AccountController {
     private final AccountService accountService;
