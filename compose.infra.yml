@@ -51,20 +51,7 @@ services:
     volumes:
       - auth_db_data:/var/lib/mysql
 
-  notification-db:
-    image: mysql/mysql-server:8.0.25
-    container_name: NetZeroHub-Notification-DB
-    restart: unless-stopped
-    environment:
-      MYSQL_ROOT_HOST: "%"
-      MYSQL_ROOT_PASSWORD: ${NOTIFICATION_DB__PASSWORD}
-    ports:
-      - "${NOTIFICATION_DB__PORT}:3306"
-    volumes:
-      - notification_db_data:/var/lib/mysql
-
 volumes:
   rabbitmq_data:
   rustfs_data:
   auth_db_data:
-  notification_db_data:

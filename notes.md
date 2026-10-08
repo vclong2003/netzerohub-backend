@@ -14,7 +14,6 @@ auth: 4003
 auth-db: 3011
 
 notification: 4004
-notification-db: 3012
 
 storage: 4005
 
