@@ -6,15 +6,16 @@
 
 The current backend consists of these modules:
 
-| Module         | Purpose                                                                                                                            | Local port |
-| -------------- | ---------------------------------------------------------------------------------------------------------------------------------- | ---------: |
-| `config`       | Spring Cloud Config Server. Loads shared and service-specific configuration from `config/config-repo`.                             |     `4000` |
-| `discovery`    | Eureka service registry. Services register here and the API Gateway uses it for service discovery.                                 |     `4001` |
-| `apigateway`   | Single entry point for front-end requests, JWT validation, routing, and OpenAPI aggregation.                                       |     `4002` |
-| `auth`         | Account registration, verification, login, token refresh, and account operations.                                                  |     `4003` |
-| `notification` | Notification processing. Notifications can be sent through email/other providers.                                                  |     `4004` |
-| `storage`      | File upload and URL generation through the S3-compatible object storage service.                                                   |     `4005` |
-| `common`       | Shared Java code used by the other modules; it is not a separately running service.                                                |          - |
+| Module                            | Purpose                                                                                                | Local port |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------ | ---------: |
+| `config`                          | Spring Cloud Config Server. Loads shared and service-specific configuration from `config/config-repo`. |     `4000` |
+| `discovery`                       | Eureka service registry. Services register here and the API Gateway uses it for service discovery.     |     `4001` |
+| `apigateway`                      | Single entry point for front-end requests, JWT validation, routing, and OpenAPI aggregation.           |     `4002` |
+| `auth`                            | Account registration, verification, login, token refresh, and account operations.                      |     `4003` |
+| `notification`                    | Notification processing. Notifications can be sent through email/other providers.                      |     `4004` |
+| `storage`                         | File upload and URL generation through the S3-compatible object storage service.                       |     `4005` |
+| `common`                          | Shared Java code used by the other modules; it is not a separately running service.                    |          - |
+| `services/green_charging_station` | Third-party service for NRMA Green Charging Station service.                                           |     `4006` |
 
 The development infrastructure (databases, RabbitMQ, and RustFS) is hosted on the
 development server `146.235.22.194`. The service configuration already points to
@@ -45,7 +46,7 @@ Do not send requests from the front end directly to `auth`, `notification`, or
 ### Notification service
 
 The notification service consumes notification events and supports notification
-delivery through configured providers such as email/OneSignal. The service uses 
+delivery through configured providers such as email/OneSignal. The service uses
 RabbitMQ on the development server for asynchronous notification processing.
 
 ### Storage service
@@ -66,7 +67,7 @@ on the development server. The current upload limits are 25 MB per file and
 │   └── config-repo/  # Shared and service configuration
 ├── discovery/        # Eureka service registry
 ├── notification/     # Notification service
-├── services/         # New third-party services
+├── services/         # Third-party services
 ├── storage/          # S3-compatible file storage service
 ├── compose.yml       # Local backbone services
 ├── compose.infra.yml # Optional local infrastructure stack
@@ -225,7 +226,7 @@ other external providers should be created as separate Spring Boot projects.
 3. Create the project under the repository's `services/` folder, for example:
 
    ```text
-   services/nrma/
+   services/green_charging_station
    ```
 
 4. Add the service's configuration to `config/config-repo`, using a matching

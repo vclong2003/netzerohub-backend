@@ -4,7 +4,8 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        MODULE: config
+        MODULE_ID: config
+        MODULE_LOCATION: config
     container_name: NetZeroHub-Config
     volumes:
       - ./config/config-repo:/app/config-repo
@@ -16,7 +17,8 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        MODULE: discovery
+        MODULE_ID: discovery
+        MODULE_LOCATION: discovery
     container_name: NetZeroHub-Discovery
     network_mode: host
     restart: unless-stopped
@@ -28,7 +30,8 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        MODULE: apigateway
+        MODULE_ID: apigateway
+        MODULE_LOCATION: apigateway
     container_name: NetZeroHub-Gateway
     network_mode: host
     restart: unless-stopped
@@ -40,7 +43,8 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        MODULE: auth
+        MODULE_ID: auth
+        MODULE_LOCATION: auth
     container_name: NetZeroHub-Auth
     network_mode: host
     restart: unless-stopped
@@ -52,7 +56,8 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        MODULE: storage
+        MODULE_ID: storage
+        MODULE_LOCATION: storage
     container_name: NetZeroHub-Storage
     network_mode: host
     restart: unless-stopped
@@ -64,8 +69,22 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        MODULE: notification
+        MODULE_ID: notification
+        MODULE_LOCATION: notification
     container_name: NetZeroHub-Notification
+    network_mode: host
+    restart: unless-stopped
+    depends_on:
+      - config
+
+  green_charging_station:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        MODULE_ID: green_charging_station
+        MODULE_LOCATION: services/green_charging_station
+    container_name: NetZeroHub-GreenChargingStation
     network_mode: host
     restart: unless-stopped
     depends_on:
