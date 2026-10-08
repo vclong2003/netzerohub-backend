@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import com.netzerohub.auth.entity.Account;
 import com.netzerohub.auth.form.UpdateAccountForm;
 import com.netzerohub.auth.repository.IAccountRepository;
-import com.netzerohub.common.client.IStorageClient;
 import com.netzerohub.common.enums.ErrorCode;
 import com.netzerohub.common.exception.BadRequestException;
 import com.netzerohub.common.util.ObjectUtils;
