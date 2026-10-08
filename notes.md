@@ -17,6 +17,9 @@ notification: 4004
 
 storage: 4005
 
+green-charging-station: 4006
+green-charging-station-db: 3012
+
 eureka dashboard: http://localhost:4000
 swagger: http://localhost:4002/swagger-ui/index.html
 
