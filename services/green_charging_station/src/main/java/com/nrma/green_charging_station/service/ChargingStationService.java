@@ -1,5 +1,7 @@
 package com.nrma.green_charging_station.service;
 
+import java.util.List;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -9,6 +11,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import com.netzerohub.common.exception.BadRequestException;
 import com.netzerohub.common.util.ObjectUtils;
+import com.netzerohub.common.util.StorageUtil;
 import com.netzerohub.common.dto.PageResponse;
 import com.netzerohub.common.enums.ErrorCode;
 import com.nrma.green_charging_station.entity.Plug;
@@ -30,6 +33,7 @@ import lombok.RequiredArgsConstructor;
 public class ChargingStationService {
         private final IStationRepository stationRepository;
         private final IPlugRepository plugRepository;
+        private final StorageUtil storageUtil;
 
         @Transactional
         public PageResponse<Station> getChargingStations(GetChargingStationsForm form) {
@@ -55,9 +59,14 @@ public class ChargingStationService {
         }
 
         public Station getChargingStationById(Integer id) {
-                return stationRepository.findById(id)
+                Station station = stationRepository.findById(id)
                                 .orElseThrow(() -> new BadRequestException(ErrorCode.ResourceNotFound,
                                                 "Charging station not found with id "));
+
+                station.setImageUrls(station.getImageUrls().stream()
+                                .map(bucketUrl -> storageUtil.getSignedUrlFromBucketUrl(bucketUrl)).toList());
+
+                return station;
         }
 
         @Transactional
@@ -73,19 +82,39 @@ public class ChargingStationService {
 
         @Transactional
         public Station updateChargingStation(Integer id, UpdateStationForm form) {
-                Station station = getChargingStationById(id);
+                Station station = stationRepository.findById(id)
+                                .orElseThrow(() -> new BadRequestException(ErrorCode.ResourceNotFound,
+                                                "Charging station not found with id "));
                 BeanUtils.copyProperties(form, station, ObjectUtils.getNullPropertyNames(form));
+
+                List<String> additionalImageUrls = form.getAdditionalImageUrls();
+                if (additionalImageUrls != null && !additionalImageUrls.isEmpty()) {
+                        station.getImageUrls().addAll(additionalImageUrls);
+                }
+
+                List<String> removalImageUrls = form.getRemovalImageUrls();
+                if (removalImageUrls != null && !removalImageUrls.isEmpty()) {
+                        List<String> removalBucketUrls = removalImageUrls.stream()
+                                        .map(bucketUrl -> storageUtil.getBucketUrlFromSignedUrl(bucketUrl))
+                                        .toList();
+                        station.getImageUrls().removeAll(removalBucketUrls);
+                }
+
                 return stationRepository.save(station);
         }
 
         public void deleteChargingStation(Integer id) {
-                Station station = getChargingStationById(id);
+                Station station = stationRepository.findById(id)
+                                .orElseThrow(() -> new BadRequestException(ErrorCode.ResourceNotFound,
+                                                "Charging station not found with id "));
                 stationRepository.delete(station);
         }
 
         @Transactional
         public Plug createPlug(Integer stationId, CreatePlugForm form) {
-                Station station = getChargingStationById(stationId);
+                Station station = stationRepository.findById(stationId)
+                                .orElseThrow(() -> new BadRequestException(ErrorCode.ResourceNotFound,
+                                                "Charging station not found with id "));
 
                 Plug plug = new Plug();
                 plug.setIdentifier(form.getIdentifier());
