@@ -27,7 +27,9 @@ import com.nrma.green_charging_station.repository.specification.StationSpecifica
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ChargingStationService {
@@ -72,11 +74,9 @@ public class ChargingStationService {
         @Transactional
         public Station createChargingStation(CreateStationForm form) {
                 Station station = new Station();
-                station.setName(form.getName());
-                station.setLatitude(form.getLatitude());
-                station.setLongitude(form.getLongitude());
-                station.setRenewableEnergyPercent(form.getRenewableEnergyPercent());
-                station.setImageUrls(form.getImageUrls());
+
+                BeanUtils.copyProperties(form, station, ObjectUtils.getNullPropertyNames(form));
+
                 return stationRepository.save(station);
         }
 
@@ -85,13 +85,14 @@ public class ChargingStationService {
                 Station station = stationRepository.findById(id)
                                 .orElseThrow(() -> new BadRequestException(ErrorCode.ResourceNotFound,
                                                 "Charging station not found with id "));
+
                 BeanUtils.copyProperties(form, station, ObjectUtils.getNullPropertyNames(form));
 
+                // Handle additional and removal image URLs
                 List<String> additionalImageUrls = form.getAdditionalImageUrls();
                 if (additionalImageUrls != null && !additionalImageUrls.isEmpty()) {
                         station.getImageUrls().addAll(additionalImageUrls);
                 }
-
                 List<String> removalImageUrls = form.getRemovalImageUrls();
                 if (removalImageUrls != null && !removalImageUrls.isEmpty()) {
                         List<String> removalBucketUrls = removalImageUrls.stream()

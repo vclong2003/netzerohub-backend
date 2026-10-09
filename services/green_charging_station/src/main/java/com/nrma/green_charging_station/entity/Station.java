@@ -45,7 +45,7 @@ public class Station {
     private StationStatus status = StationStatus.Active;
 
     @JdbcTypeCode(SqlTypes.JSON)
-    @Column(nullable = true)
+    @Column(nullable = false)
     private List<String> imageUrls = new ArrayList<>();
 
     @OneToMany(mappedBy = "station", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
