@@ -6,7 +6,9 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.netzerohub.common.annotation.RequireRole;
 import com.netzerohub.common.dto.PageResponse;
+import com.netzerohub.common.enums.AccountRole;
 import com.nrma.green_charging_station.dto.PlugDto;
 import com.nrma.green_charging_station.dto.StationDto;
 import com.nrma.green_charging_station.entity.Plug;
@@ -54,6 +56,7 @@ public class ChargingStationController {
         return ResponseEntity.ok(stationDto);
     }
 
+    @RequireRole({ AccountRole.Admin })
     @PostMapping("")
     public ResponseEntity<StationDto> createChargingStation(@Valid @RequestBody CreateStationForm form) {
         Station station = chargingStationService.createChargingStation(form);
@@ -61,6 +64,7 @@ public class ChargingStationController {
         return ResponseEntity.ok(stationDto);
     }
 
+    @RequireRole({ AccountRole.Admin })
     @PutMapping("/{id}")
     public ResponseEntity<StationDto> updateChargingStation(@PathVariable("id") Integer id,
             @RequestBody UpdateStationForm form) {
@@ -69,12 +73,14 @@ public class ChargingStationController {
         return ResponseEntity.ok(stationDto);
     }
 
+    @RequireRole({ AccountRole.Admin })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteChargingStation(@PathVariable("id") Integer id) {
         chargingStationService.deleteChargingStation(id.intValue());
         return ResponseEntity.noContent().build();
     }
 
+    @RequireRole({ AccountRole.Admin })
     @PostMapping("/{stationId}/plugs")
     public ResponseEntity<PlugDto> createPlug(@PathVariable("stationId") Integer stationId,
             @Valid @RequestBody CreatePlugForm form) {
@@ -82,6 +88,7 @@ public class ChargingStationController {
         return ResponseEntity.ok(new PlugDto(plug));
     }
 
+    @RequireRole({ AccountRole.Admin })
     @PutMapping("/{stationId}/plugs/{plugId}")
     public ResponseEntity<PlugDto> updatePlug(@PathVariable("stationId") Integer stationId,
             @PathVariable("plugId") Integer plugId,
@@ -90,6 +97,7 @@ public class ChargingStationController {
         return ResponseEntity.ok(new PlugDto(plug));
     }
 
+    @RequireRole({ AccountRole.Admin })
     @DeleteMapping("/{stationId}/plugs/{plugId}")
     public ResponseEntity<Void> deletePlug(@PathVariable("stationId") Integer stationId,
             @PathVariable("plugId") Integer plugId) {

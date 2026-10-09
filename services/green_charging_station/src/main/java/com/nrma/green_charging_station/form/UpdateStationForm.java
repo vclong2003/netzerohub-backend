@@ -2,6 +2,8 @@ package com.nrma.green_charging_station.form;
 
 import java.util.List;
 
+import com.nrma.green_charging_station.enums.StationStatus;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,5 +22,9 @@ public class UpdateStationForm {
 
     private Integer renewableEnergyPercent;
 
-    private List<String> imageUrls;
+    private StationStatus status;
+
+    private List<String> additionalImageUrls;
+
+    private List<String> removalImageUrls;
 }
