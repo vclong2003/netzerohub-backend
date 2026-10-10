@@ -89,3 +89,16 @@ services:
     restart: unless-stopped
     depends_on:
       - config
+  
+  recycling_centre:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        MODULE_ID: recycling_centre
+        MODULE_LOCATION: services/recycling_centre
+    container_name: NetZeroHub-RecyclingCentre
+    network_mode: host
+    restart: unless-stopped
+    depends_on:
+      - config  
