@@ -49,7 +49,7 @@ public class Account implements Serializable {
     @Column(nullable = false)
     private Boolean isVerified = false;
 
-    @Column(unique = true, nullable = true)
+    @Column(nullable = true)
     private String phone;
 
     @Column(nullable = false)
