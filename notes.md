@@ -21,10 +21,10 @@ green-charging-station: 4006
 green-charging-station-db: 3012
 
 recycling-center: 4007
-recycling-center-db: 3013
+recycling-center-db: 3017
 
 pollution-report: 4008
-pollution-report-db: 3014
+pollution-report-db: 3018
 
 eureka dashboard: http://localhost:4000
 swagger: http://localhost:4002/swagger-ui/index.html
