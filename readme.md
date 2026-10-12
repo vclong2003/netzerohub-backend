@@ -16,6 +16,7 @@ The current backend consists of these modules:
 | `storage`                         | File upload and URL generation through the S3-compatible object storage service.                       |     `4005` |
 | `common`                          | Shared Java code used by the other modules; it is not a separately running service.                    |          - |
 | `services/green_charging_station` | Third-party service for NRMA Green Charging Station service.                                           |     `4006` |
+| `services/recycling_centre`       | Service for managing recycling centres and their associated waste types.                               |     `4007` |
 
 The development infrastructure (databases, RabbitMQ, and RustFS) is hosted on the
 development server `146.235.22.194`. The service configuration already points to
