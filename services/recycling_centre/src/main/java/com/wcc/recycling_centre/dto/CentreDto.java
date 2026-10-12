@@ -22,6 +22,9 @@ public class CentreDto {
     private Double longitude;
 
     private List<String> imageUrls;
+    private String address;
+    private String openingHours;
+    private List<String> infoSheetUrls;
 
     private List<WasteTypeDto> acceptedWasteTypes = new ArrayList<>();
 
@@ -31,5 +34,8 @@ public class CentreDto {
         this.latitude = entity.getLatitude();
         this.longitude = entity.getLongitude();
         this.imageUrls = entity.getImageUrls();
+        this.address = entity.getAddress();
+        this.openingHours = entity.getOpeningHours();
+        this.infoSheetUrls = entity.getInfoSheetUrls();
     }
 }

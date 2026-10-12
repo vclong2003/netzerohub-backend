@@ -41,6 +41,16 @@ public class Centre {
     @Column(nullable = true)
     private List<String> imageUrls = new ArrayList<>();
 
+    @Column(nullable = true)
+    private String address;
+
+    @Column(nullable = true)
+    private String openingHours;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(nullable = true)
+    private List<String> infoSheetUrls = new ArrayList<>();
+
     @ManyToMany
     @JoinTable(
         name = "centre_waste_type",

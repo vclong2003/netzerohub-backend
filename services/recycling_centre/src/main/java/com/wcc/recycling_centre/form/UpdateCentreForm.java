@@ -20,4 +20,7 @@ public class UpdateCentreForm {
     private Double longitude;
 
     private List<String> imageUrls;
+    private String address;
+    private String openingHours;
+    private List<String> infoSheetUrls;
 }

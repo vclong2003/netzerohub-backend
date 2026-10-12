@@ -75,6 +75,9 @@ public class RecyclingCentreService {
         centre.setLatitude(form.getLatitude());
         centre.setLongitude(form.getLongitude());
         centre.setImageUrls(form.getImageUrls());
+        centre.setAddress(form.getAddress());
+        centre.setOpeningHours(form.getOpeningHours());
+        centre.setInfoSheetUrls(form.getInfoSheetUrls());
 
         return centreRepository.save(centre);
     }
