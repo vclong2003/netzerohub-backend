@@ -103,8 +103,10 @@ public class RecyclingCentreService {
 
     @Transactional
     public Centre updateCentre(Integer id, UpdateCentreForm form) {
-
-        Centre centre = getCentreById(id);
+        Centre centre = centreRepository.findById(id)
+                .orElseThrow(() -> new BadRequestException(
+                        ErrorCode.ResourceNotFound,
+                        "Recycling centre not found with id " + id));
 
         BeanUtils.copyProperties(
                 form,
