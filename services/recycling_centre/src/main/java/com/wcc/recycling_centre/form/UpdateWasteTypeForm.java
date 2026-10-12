@@ -10,6 +10,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateWasteTypeForm {
-
     private String name;
+    private String code;
 }

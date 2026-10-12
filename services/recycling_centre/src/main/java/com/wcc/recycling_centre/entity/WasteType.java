@@ -22,4 +22,6 @@ public class WasteType {
     @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false, unique = true)
+    private String code;
 }
