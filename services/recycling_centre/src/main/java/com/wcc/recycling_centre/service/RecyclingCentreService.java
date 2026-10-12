@@ -168,10 +168,16 @@ public class RecyclingCentreService {
 
     @Transactional
     public WasteType createWasteType(CreateWasteTypeForm form) {
+        if (wasteTypeRepository.existsByCode(form.getCode())) {
+            throw new BadRequestException(
+                    ErrorCode.ResourceAlreadyExists,
+                    "Waste type with code " + form.getCode() + " already exists");
+        }
 
         WasteType wasteType = new WasteType();
 
         wasteType.setName(form.getName());
+        wasteType.setCode(form.getCode());
 
         return wasteTypeRepository.save(wasteType);
     }
@@ -180,11 +186,16 @@ public class RecyclingCentreService {
     public WasteType updateWasteType(
             Integer wasteTypeId,
             UpdateWasteTypeForm form) {
-
         WasteType wasteType = wasteTypeRepository.findById(wasteTypeId)
                 .orElseThrow(() -> new BadRequestException(
                         ErrorCode.ResourceNotFound,
                         "Waste type not found with id " + wasteTypeId));
+
+        if (form.getCode() != null && wasteTypeRepository.existsByCode(form.getCode())) {
+            throw new BadRequestException(
+                    ErrorCode.ResourceAlreadyExists,
+                    "Waste type with code " + form.getCode() + " already exists");
+        }
 
         BeanUtils.copyProperties(
                 form,

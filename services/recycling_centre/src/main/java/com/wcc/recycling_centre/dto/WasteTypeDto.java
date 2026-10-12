@@ -15,9 +15,11 @@ public class WasteTypeDto {
 
     private Integer id;
     private String name;
+    private String code;
 
     public WasteTypeDto(WasteType entity) {
         this.id = entity.getId();
         this.name = entity.getName();
+        this.code = entity.getCode();
     }
 }

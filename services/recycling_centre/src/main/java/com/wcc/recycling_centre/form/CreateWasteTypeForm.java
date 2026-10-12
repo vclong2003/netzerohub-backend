@@ -14,4 +14,7 @@ public class CreateWasteTypeForm {
 
     @NotBlank(message = "Waste type name is required")
     private String name;
+
+    @NotBlank(message = "Waste type code is required")
+    private String code;
 }

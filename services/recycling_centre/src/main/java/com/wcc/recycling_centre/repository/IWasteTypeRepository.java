@@ -11,4 +11,6 @@ public interface IWasteTypeRepository extends JpaRepository<WasteType, Integer> 
     @Modifying
     @Query(value = "DELETE FROM centre_waste_type WHERE waste_type_id = :wasteTypeId", nativeQuery = true)
     void deleteCentreAssociations(@Param("wasteTypeId") Integer wasteTypeId);
+
+    boolean existsByCode(String code);
 }
