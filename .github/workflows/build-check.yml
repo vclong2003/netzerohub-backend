@@ -20,6 +20,4 @@ jobs:
       - name: Cleanup Verification Artifacts
         if: always()
         run: |
-          docker image prune -af --filter "until=24h"
-          docker builder prune -af
-          docker container prune -f
+          docker system prune -f

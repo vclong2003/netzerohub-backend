@@ -15,10 +15,9 @@ jobs:
 
       - name: Build and Start Containers
         run: |
-          docker compose -f compose.stag.yml up -d --build
+          docker compose -f compose.stag.yml up -d --build --quiet
 
       - name: Cleanup Docker Artifacts
         if: always()
         run: |
-          docker image prune -f
-          docker builder prune -af --reserved-space 5GB
+          docker system prune -f
