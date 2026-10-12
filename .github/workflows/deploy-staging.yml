@@ -15,7 +15,7 @@ jobs:
 
       - name: Build and Start Containers
         run: |
-          docker compose -f compose.stag.yml up -d --build --quiet
+          docker compose -f compose.stag.yml up -d --build --quiet-build
 
       - name: Cleanup Docker Artifacts
         if: always()
