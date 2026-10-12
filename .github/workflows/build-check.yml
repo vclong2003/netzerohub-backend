@@ -20,5 +20,4 @@ jobs:
       - name: Cleanup Verification Artifacts
         if: always()
         run: |
-          docker image prune -f
-          docker builder prune -af --reserved-space 5GB
+          docker system prune -f
