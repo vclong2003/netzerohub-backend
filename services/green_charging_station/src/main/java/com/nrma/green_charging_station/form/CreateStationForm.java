@@ -1,5 +1,6 @@
 package com.nrma.green_charging_station.form;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.validation.constraints.NotBlank;
@@ -26,5 +27,5 @@ public class CreateStationForm {
     @NotNull(message = "Renewable energy percentage is required")
     private Integer renewableEnergyPercent;
 
-    private List<String> imageUrls;
+    private List<String> imageUrls = new ArrayList<>();
 }

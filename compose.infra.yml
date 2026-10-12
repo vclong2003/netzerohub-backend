@@ -62,21 +62,35 @@ services:
       - "${GREEN_CHARGING_STATION_DB__PORT}:3306"
     volumes:
       - green_charging_station_db_data:/var/lib/mysql
-  recycling-centre-db:
+
+  recycling-center-db:
     image: mysql/mysql-server:8.0.25
-    container_name: NetZeroHub-RecyclingCentre-DB
+    container_name: NetZeroHub-RecyclingCenter-DB
     restart: unless-stopped
     environment:
       MYSQL_ROOT_HOST: "%"
-      MYSQL_ROOT_PASSWORD: ${RECYCLING_CENTRE_DB__PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${RECYCLING_CENTER_DB__PASSWORD}
     ports:
-      - "${RECYCLING_CENTRE_DB__PORT}:3306"
+      - "${RECYCLING_CENTER_DB__PORT}:3306"
     volumes:
-      - recycling_centre_db_data:/var/lib/mysql
+      - recycling_center_db_data:/var/lib/mysql
+
+  pollution-report-db:
+    image: mysql/mysql-server:8.0.25
+    container_name: NetZeroHub-PollutionReport-DB
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_HOST: "%"
+      MYSQL_ROOT_PASSWORD: ${POLLUTION_REPORT_DB__PASSWORD}
+    ports:
+      - "${POLLUTION_REPORT_DB__PORT}:3306"
+    volumes:
+      - pollution_report_db_data:/var/lib/mysql
 
 volumes:
   rabbitmq_data:
   rustfs_data:
   auth_db_data:
   green_charging_station_db_data:
-  recycling_centre_db_data:
+  recycling_center_db_data:
+  pollution_report_db_data:

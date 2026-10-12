@@ -22,7 +22,6 @@ public class StationDto {
     private Double longitude;
     private Integer renewableEnergyPercent;
     private StationStatus status = StationStatus.Active;
-
     private List<String> imageUrls;
 
     private List<PlugDto> plugs = new ArrayList<>();
@@ -34,5 +33,6 @@ public class StationDto {
         this.longitude = entity.getLongitude();
         this.renewableEnergyPercent = entity.getRenewableEnergyPercent();
         this.status = entity.getStatus();
+        this.imageUrls = entity.getImageUrls();
     }
 }
