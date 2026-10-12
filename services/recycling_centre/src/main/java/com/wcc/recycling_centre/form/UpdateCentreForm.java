@@ -1,5 +1,6 @@
 package com.wcc.recycling_centre.form;
 
+import java.time.LocalTime;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -19,8 +20,18 @@ public class UpdateCentreForm {
 
     private Double longitude;
 
-    private List<String> imageUrls;
+    private LocalTime openingTime;
+
+    private LocalTime closingTime;
+
+    private List<Integer> acceptedWasteTypeIds;
+
+    private List<String> additionalInfoSheetUrls;
+    private List<String> removedInfoSheetUrls;
+
+    private List<String> additionalImageUrls;
+    private List<String> removedImageUrls;
+
     private String address;
-    private String openingHours;
-    private List<String> infoSheetUrls;
+
 }

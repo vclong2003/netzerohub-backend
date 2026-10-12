@@ -1,5 +1,6 @@
 package com.wcc.recycling_centre.form;
 
+import java.time.LocalTime;
 import java.util.List;
 
 import jakarta.validation.constraints.NotBlank;
@@ -24,8 +25,13 @@ public class CreateCentreForm {
     @NotNull(message = "Longitude is required")
     private Double longitude;
 
-    private List<String> imageUrls;
+    private LocalTime openingTime;
+
+    private LocalTime closingTime;
+
     private String address;
-    private String openingHours;
+
+    private List<String> imageUrls;
+
     private List<String> infoSheetUrls;
 }

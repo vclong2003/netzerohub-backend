@@ -10,7 +10,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GetCentresForm {
-
     private String name;
     private Double latitude;
     private Double longitude;

@@ -1,5 +1,6 @@
 package com.wcc.recycling_centre.dto;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +24,8 @@ public class CentreDto {
 
     private List<String> imageUrls;
     private String address;
-    private String openingHours;
+    private LocalTime openingTime;
+    private LocalTime closingTime;
     private List<String> infoSheetUrls;
 
     private List<WasteTypeDto> acceptedWasteTypes = new ArrayList<>();
@@ -35,7 +37,8 @@ public class CentreDto {
         this.longitude = entity.getLongitude();
         this.imageUrls = entity.getImageUrls();
         this.address = entity.getAddress();
-        this.openingHours = entity.getOpeningHours();
+        this.openingTime = entity.getOpeningTime();
+        this.closingTime = entity.getClosingTime();
         this.infoSheetUrls = entity.getInfoSheetUrls();
     }
 }

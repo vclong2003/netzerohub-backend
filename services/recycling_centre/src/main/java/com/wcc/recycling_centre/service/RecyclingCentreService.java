@@ -1,5 +1,7 @@
 package com.wcc.recycling_centre.service;
 
+import java.util.List;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,6 +14,7 @@ import com.netzerohub.common.dto.PageResponse;
 import com.netzerohub.common.enums.ErrorCode;
 import com.netzerohub.common.exception.BadRequestException;
 import com.netzerohub.common.util.ObjectUtils;
+import com.netzerohub.common.util.StorageUtil;
 import com.wcc.recycling_centre.entity.Centre;
 import com.wcc.recycling_centre.entity.WasteType;
 import com.wcc.recycling_centre.form.CreateCentreForm;
@@ -32,6 +35,7 @@ public class RecyclingCentreService {
 
     private final ICentreRepository centreRepository;
     private final IWasteTypeRepository wasteTypeRepository;
+    private final StorageUtil storageUtil;
 
     @Transactional
     public PageResponse<Centre> getCentres(GetCentresForm form) {
@@ -60,10 +64,18 @@ public class RecyclingCentreService {
     }
 
     public Centre getCentreById(Integer id) {
-        return centreRepository.findById(id)
+        Centre centre = centreRepository.findById(id)
                 .orElseThrow(() -> new BadRequestException(
                         ErrorCode.ResourceNotFound,
                         "Recycling centre not found with id " + id));
+
+        centre.setImageUrls(centre.getImageUrls().stream()
+                .map(bucketUrl -> storageUtil.getSignedUrlFromBucketUrl(bucketUrl)).toList());
+
+        centre.setInfoSheetUrls(centre.getInfoSheetUrls().stream()
+                .map(bucketUrl -> storageUtil.getSignedUrlFromBucketUrl(bucketUrl)).toList());
+
+        return centre;
     }
 
     @Transactional
@@ -74,10 +86,17 @@ public class RecyclingCentreService {
         centre.setName(form.getName());
         centre.setLatitude(form.getLatitude());
         centre.setLongitude(form.getLongitude());
-        centre.setImageUrls(form.getImageUrls());
         centre.setAddress(form.getAddress());
-        centre.setOpeningHours(form.getOpeningHours());
-        centre.setInfoSheetUrls(form.getInfoSheetUrls());
+        centre.setOpeningTime(form.getOpeningTime());
+        centre.setClosingTime(form.getClosingTime());
+
+        if (form.getImageUrls() != null) {
+            centre.setImageUrls(form.getImageUrls());
+        }
+
+        if (form.getInfoSheetUrls() != null) {
+            centre.setInfoSheetUrls(form.getInfoSheetUrls());
+        }
 
         return centreRepository.save(centre);
     }
@@ -92,13 +111,57 @@ public class RecyclingCentreService {
                 centre,
                 ObjectUtils.getNullPropertyNames(form));
 
+        // waste types
+        if (form.getAcceptedWasteTypeIds() != null) {
+            List<WasteType> wasteTypes = wasteTypeRepository.findAllById(form.getAcceptedWasteTypeIds());
+            if (wasteTypes.size() != form.getAcceptedWasteTypeIds().size()) {
+                throw new IllegalArgumentException("One or more WasteType IDs are invalid");
+            }
+            centre.getAcceptedWasteTypes().clear();
+            centre.getAcceptedWasteTypes().addAll(wasteTypes);
+        }
+
+        // images
+        List<String> additionalImageUrls = form.getAdditionalImageUrls();
+        if (additionalImageUrls != null && !additionalImageUrls.isEmpty()) {
+            centre.getImageUrls().addAll(additionalImageUrls);
+        }
+        List<String> removedImageUrls = form.getRemovedImageUrls();
+        if (removedImageUrls != null && !removedImageUrls.isEmpty()) {
+            List<String> removedBucketUrls = removedImageUrls.stream()
+                    .map(bucketUrl -> storageUtil.getBucketUrlFromSignedUrl(bucketUrl))
+                    .toList();
+            centre.getImageUrls().removeAll(removedBucketUrls);
+        }
+
+        // info sheets
+        List<String> additionalInfoSheetUrls = form.getAdditionalInfoSheetUrls();
+        if (additionalInfoSheetUrls != null && !additionalInfoSheetUrls.isEmpty()) {
+            centre.getInfoSheetUrls().addAll(additionalInfoSheetUrls);
+        }
+        List<String> removedInfoSheetUrls = form.getRemovedInfoSheetUrls();
+        if (removedInfoSheetUrls != null && !removedInfoSheetUrls.isEmpty()) {
+            List<String> removedBucketUrls = removedInfoSheetUrls.stream()
+                    .map(bucketUrl -> storageUtil.getBucketUrlFromSignedUrl(bucketUrl))
+                    .toList();
+            centre.getInfoSheetUrls().removeAll(removedBucketUrls);
+        }
+
         return centreRepository.save(centre);
+    }
+
+    @Transactional
+    public List<WasteType> getAllWasteTypes() {
+        return wasteTypeRepository.findAll();
     }
 
     @Transactional
     public void deleteCentre(Integer id) {
 
-        Centre centre = getCentreById(id);
+        Centre centre = centreRepository.findById(id)
+                .orElseThrow(() -> new BadRequestException(
+                        ErrorCode.ResourceNotFound,
+                        "Recycling centre not found with id " + id));
 
         centreRepository.delete(centre);
     }
@@ -133,12 +196,13 @@ public class RecyclingCentreService {
 
     @Transactional
     public void deleteWasteType(Integer wasteTypeId) {
-
         WasteType wasteType = wasteTypeRepository.findById(wasteTypeId)
                 .orElseThrow(() -> new BadRequestException(
                         ErrorCode.ResourceNotFound,
                         "Waste type not found with id " + wasteTypeId));
 
-        wasteTypeRepository.delete(wasteType);
+        wasteTypeRepository.deleteCentreAssociations(wasteTypeId);
+
+        wasteTypeRepository.deleteById(wasteType.getId());
     }
 }

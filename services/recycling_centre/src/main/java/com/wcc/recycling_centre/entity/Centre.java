@@ -1,5 +1,6 @@
 package com.wcc.recycling_centre.entity;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,17 +46,16 @@ public class Centre {
     private String address;
 
     @Column(nullable = true)
-    private String openingHours;
+    private LocalTime openingTime;
+
+    @Column(nullable = true)
+    private LocalTime closingTime;
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(nullable = true)
     private List<String> infoSheetUrls = new ArrayList<>();
 
     @ManyToMany
-    @JoinTable(
-        name = "centre_waste_type",
-        joinColumns = @JoinColumn(name = "centre_id"),
-        inverseJoinColumns = @JoinColumn(name = "waste_type_id")
-    )
+    @JoinTable(name = "centre_waste_type", joinColumns = @JoinColumn(name = "centre_id"), inverseJoinColumns = @JoinColumn(name = "waste_type_id"))
     private List<WasteType> acceptedWasteTypes = new ArrayList<>();
 }

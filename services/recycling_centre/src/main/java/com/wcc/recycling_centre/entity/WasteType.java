@@ -21,4 +21,5 @@ public class WasteType {
 
     @Column(nullable = false)
     private String name;
+
 }
