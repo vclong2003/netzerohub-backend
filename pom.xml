@@ -34,6 +34,7 @@
         <module>notification</module>
         <module>storage</module>
         <module>services/green_charging_station</module>
+        <module>services/recycling_centre</module>
     </modules>
 
     <dependencyManagement>

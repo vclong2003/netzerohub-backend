@@ -113,6 +113,22 @@ services:
     restart: unless-stopped
     depends_on:
       - config
+      
+  recycling_centre:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        MODULE_ID: recycling_centre
+        MODULE_LOCATION: services/recycling_centre
+    container_name: NetZeroHub-RecyclingCentre
+    environment:
+      - CONFIG_SERVER_URL=http://config:4000
+    networks:
+      - netzerohub-net
+    restart: unless-stopped
+    depends_on:
+      - config
 
 networks:
   netzerohub-net:
