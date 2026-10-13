@@ -130,6 +130,23 @@ services:
     depends_on:
       - config
 
+  pollution_report:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        MODULE_ID: pollution_report
+        MODULE_LOCATION: services/pollution_report
+    container_name: NetZeroHub-PollutionReport
+    environment:
+      - CONFIG_SERVER_URL=http://config:4000
+    networks:
+      - netzerohub-net
+    restart: unless-stopped
+    depends_on:
+      - config
+      - discovery
+
 networks:
   netzerohub-net:
     driver: bridge

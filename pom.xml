@@ -35,6 +35,7 @@
         <module>storage</module>
         <module>services/green_charging_station</module>
         <module>services/recycling_centre</module>
+        <module>services/pollution_report</module>
     </modules>
 
     <dependencyManagement>
