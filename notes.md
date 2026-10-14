@@ -29,8 +29,11 @@ pollution-report-db: 3318
 eureka dashboard: http://localhost:4000
 swagger: http://localhost:4002/swagger-ui/index.html
 
-- to do: implement storage files url retrieval in backend
-- to do if possible: payment
+- to do: implement storage files url retrieval in backend (ok)
+
+- onesignal template for pollution_report:
+  - user_name, report_title, report_datetime
+  - 03aec04c-5e18-4aec-b12c-5380f5592c42
 
 #### From root run these:
 

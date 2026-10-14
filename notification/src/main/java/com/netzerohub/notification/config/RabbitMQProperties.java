@@ -8,12 +8,12 @@ public record RabbitMQProperties(Exchange exchange, Queue queue, RoutingKey rout
     }
 
     public record Queue(Notification notification) {
-        public record Notification(String registration, String passwordReset) {
+        public record Notification(String registration, String passwordReset, String pollutionReportUpdate) {
         }
     }
 
     public record RoutingKey(Notification notification) {
-        public record Notification(String registration, String passwordReset) {
+        public record Notification(String registration, String passwordReset, String pollutionReportUpdate) {
         }
     }
 }

@@ -50,6 +50,7 @@ public class PollutionReportController {
         return ResponseEntity.ok(reportService.getReports(form));
     }
 
+    @RequireRole({ AccountRole.User })
     @GetMapping("/my")
     public ResponseEntity<PageResponse<PollutionReportDto>> getMyReports(
             @ParameterObject @Valid @ModelAttribute GetPollutionReportsForm form) {

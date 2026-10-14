@@ -2,6 +2,7 @@ package com.netzerohub.pollution_report.service;
 
 import java.util.List;
 
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -9,14 +10,16 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.netzerohub.common.client.IAuthClient;
 import com.netzerohub.common.context.RequestContext;
 import com.netzerohub.common.dto.PageResponse;
 import com.netzerohub.common.enums.AccountRole;
 import com.netzerohub.common.enums.ErrorCode;
 import com.netzerohub.common.exception.BadRequestException;
 import com.netzerohub.common.util.StorageUtil;
-
+import com.netzerohub.pollution_report.config.RabbitMQProperties;
 import com.netzerohub.pollution_report.dto.PollutionReportDto;
+import com.netzerohub.pollution_report.dto.PollutionReportUpdateEvent;
 import com.netzerohub.pollution_report.entity.PollutionReport;
 import com.netzerohub.pollution_report.enums.PollutionReportStatus;
 import com.netzerohub.pollution_report.form.CreatePollutionReportForm;
@@ -26,188 +29,204 @@ import com.netzerohub.pollution_report.repository.IPollutionReportRepository;
 import com.netzerohub.pollution_report.repository.specification.PollutionReportSpecification;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PollutionReportService {
 
-    private final IPollutionReportRepository reportRepository;
-    private final StorageUtil storageUtil;
+        private final IPollutionReportRepository reportRepository;
+        private final StorageUtil storageUtil;
+        private final RabbitTemplate rabbitTemplate;
+        private final RabbitMQProperties rabbitMQProperties;
+        private final IAuthClient authClient;
 
-    @Transactional
-    public PollutionReportDto createReport(
-            CreatePollutionReportForm form) {
+        @Transactional
+        public PollutionReportDto createReport(
+                        CreatePollutionReportForm form) {
 
-        RequestContext context = requireLogin();
+                RequestContext context = requireLogin();
 
-        PollutionReport report = new PollutionReport();
-        report.setAccountId(context.getAccountId());
-        report.setTitle(form.getTitle().trim());
-        report.setDescription(form.getDescription().trim());
-        report.setType(form.getType());
-        report.setStatus(PollutionReportStatus.PENDING);
-        report.setImageUrl(trimOrNull(form.getImageUrl()));
-        report.setAddress(trimOrNull(form.getAddress()));
+                PollutionReport report = new PollutionReport();
+                report.setAccountId(context.getAccountId());
+                report.setTitle(form.getTitle().trim());
+                report.setDescription(form.getDescription().trim());
+                report.setType(form.getType());
+                report.setStatus(PollutionReportStatus.PENDING);
+                report.setImageUrl(trimOrNull(form.getImageUrl()));
+                report.setAddress(trimOrNull(form.getAddress()));
 
-        if (form.getCoordinates() != null) {
-            report.setLatitude(form.getCoordinates().getLatitude());
-            report.setLongitude(form.getCoordinates().getLongitude());
+                if (form.getCoordinates() != null) {
+                        report.setLatitude(form.getCoordinates().getLatitude());
+                        report.setLongitude(form.getCoordinates().getLongitude());
+                }
+
+                return toDto(reportRepository.saveAndFlush(report));
         }
 
-        return toDto(reportRepository.saveAndFlush(report));
-    }
+        @Transactional(readOnly = true)
+        public PageResponse<PollutionReportDto> getReports(
+                        GetPollutionReportsForm form) {
 
-    @Transactional(readOnly = true)
-    public PageResponse<PollutionReportDto> getReports(
-            GetPollutionReportsForm form) {
+                requireAdmin();
 
-        requireAdmin();
+                Specification<PollutionReport> specification = PollutionReportSpecification.filterByForm(form);
 
-        Specification<PollutionReport> specification =
-                PollutionReportSpecification.filterByForm(form);
-
-        return queryReports(form, specification);
-    }
-
-    @Transactional(readOnly = true)
-    public PageResponse<PollutionReportDto> getMyReports(
-            GetPollutionReportsForm form) {
-
-        RequestContext context = requireLogin();
-
-        Specification<PollutionReport> specification =
-                PollutionReportSpecification.filterByForm(form)
-                        .and(PollutionReportSpecification.ownedBy(
-                                context.getAccountId()));
-
-        return queryReports(form, specification);
-    }
-
-    @Transactional(readOnly = true)
-    public PollutionReportDto getReportById(Integer id) {
-
-        RequestContext context = requireLogin();
-        PollutionReport report = findReport(id);
-
-        boolean isAdmin =
-                context.getAccountRole() == AccountRole.Admin;
-
-        boolean isOwner =
-                context.getAccountId().equals(report.getAccountId());
-
-        if (!isAdmin && !isOwner) {
-            throw new BadRequestException(
-                    ErrorCode.ResourceNotOwnedByUser,
-                    "You cannot access another user's report");
+                return queryReports(form, specification);
         }
 
-        return toDto(report);
-    }
+        @Transactional(readOnly = true)
+        public PageResponse<PollutionReportDto> getMyReports(
+                        GetPollutionReportsForm form) {
 
-    @Transactional
-    public List<PollutionReportDto> updateStatuses(
-            UpdatePollutionReportStatusForm form) {
+                RequestContext context = requireLogin();
 
-        requireAdmin();
+                Specification<PollutionReport> specification = PollutionReportSpecification.filterByForm(form)
+                                .and(PollutionReportSpecification.ownedBy(
+                                                context.getAccountId()));
 
-        List<Integer> ids = form.getIds().stream()
-                .distinct()
-                .toList();
-
-        List<PollutionReport> reports =
-                reportRepository.findAllById(ids);
-
-        if (reports.size() != ids.size()) {
-            throw new BadRequestException(
-                    ErrorCode.ResourceNotFound,
-                    "One or more reports were not found");
+                return queryReports(form, specification);
         }
 
-        for (PollutionReport report : reports) {
-            report.setStatus(form.getStatus());
+        @Transactional(readOnly = true)
+        public PollutionReportDto getReportById(Integer id) {
+
+                RequestContext context = requireLogin();
+                PollutionReport report = findReport(id);
+
+                boolean isAdmin = context.getAccountRole() == AccountRole.Admin;
+
+                boolean isOwner = context.getAccountId().equals(report.getAccountId());
+
+                if (!isAdmin && !isOwner) {
+                        throw new BadRequestException(
+                                        ErrorCode.ResourceNotOwnedByUser,
+                                        "You cannot access another user's report");
+                }
+
+                return toDto(report);
         }
 
-        return reportRepository.saveAllAndFlush(reports)
-                .stream()
-                .map(this::toDto)
-                .toList();
-    }
+        @Transactional
+        public List<PollutionReportDto> updateStatuses(
+                        UpdatePollutionReportStatusForm form) {
 
-    private PageResponse<PollutionReportDto> queryReports(
-            GetPollutionReportsForm form,
-            Specification<PollutionReport> specification) {
+                requireAdmin();
 
-        PageRequest pageable = PageRequest.of(
-                form.getPage(),
-                form.getPageSize(),
-                Sort.by(Sort.Direction.DESC, "createdAt", "id"));
+                List<Integer> ids = form.getIds().stream()
+                                .distinct()
+                                .toList();
 
-        Page<PollutionReport> result =
-                reportRepository.findAll(specification, pageable);
+                List<PollutionReport> reports = reportRepository.findAllById(ids);
 
-        return PageResponse.<PollutionReportDto>builder()
-                .data(result.getContent().stream()
-                        .map(this::toDto)
-                        .toList())
-                .page(result.getNumber())
-                .pageSize(result.getSize())
-                .totalElements(result.getTotalElements())
-                .totalPages(result.getTotalPages())
-                .hasNext(result.hasNext())
-                .hasPrevious(result.hasPrevious())
-                .build();
-    }
+                if (reports.size() != ids.size()) {
+                        throw new BadRequestException(
+                                        ErrorCode.ResourceNotFound,
+                                        "One or more reports were not found");
+                }
 
-    private PollutionReport findReport(Integer id) {
-        return reportRepository.findById(id)
-                .orElseThrow(() -> new BadRequestException(
-                        ErrorCode.ResourceNotFound,
-                        "Pollution report not found"));
-    }
+                for (PollutionReport report : reports) {
+                        report.setStatus(form.getStatus());
+                        try {
+                                String email = authClient.getAccountById(report.getAccountId()).getEmail();
+                                String userName = authClient.getAccountById(report.getAccountId()).getFirstName() + " "
+                                                + authClient.getAccountById(report.getAccountId()).getLastName();
+                                PollutionReportUpdateEvent event = new PollutionReportUpdateEvent(
+                                                email,
+                                                userName,
+                                                report.getTitle(),
+                                                report.getCreatedAt().toString());
 
-    private PollutionReportDto toDto(PollutionReport report) {
-        PollutionReportDto dto = new PollutionReportDto(report);
+                                rabbitTemplate.convertAndSend(
+                                                rabbitMQProperties.exchange().notification(),
+                                                rabbitMQProperties.routingKey().notification().pollutionReportUpdate(),
+                                                event);
+                                log.info("pollution report update evt sent");
+                        } catch (Exception e) {
+                                log.error("Error sending notification", e);
+                        }
+                }
 
-        String bucketUrl = report.getImageUrl();
-
-        if (bucketUrl != null && !bucketUrl.isBlank()) {
-            String signedUrl =
-                    storageUtil.getSignedUrlFromBucketUrl(bucketUrl);
-
-            dto.setImageUrl(trimOrNull(signedUrl));
+                return reportRepository.saveAllAndFlush(reports)
+                                .stream()
+                                .map(this::toDto)
+                                .toList();
         }
 
-        return dto;
-    }
+        private PageResponse<PollutionReportDto> queryReports(
+                        GetPollutionReportsForm form,
+                        Specification<PollutionReport> specification) {
 
-    private RequestContext requireLogin() {
-        RequestContext context = RequestContext.get();
+                PageRequest pageable = PageRequest.of(
+                                form.getPage(),
+                                form.getPageSize(),
+                                Sort.by(Sort.Direction.DESC, "createdAt", "id"));
 
-        if (context == null
-                || context.getAccountId() == null
-                || context.getAccountRole() == null) {
+                Page<PollutionReport> result = reportRepository.findAll(specification, pageable);
 
-            throw new BadRequestException(
-                    ErrorCode.InvalidCredentials,
-                    "Login required");
+                return PageResponse.<PollutionReportDto>builder()
+                                .data(result.getContent().stream()
+                                                .map(this::toDto)
+                                                .toList())
+                                .page(result.getNumber())
+                                .pageSize(result.getSize())
+                                .totalElements(result.getTotalElements())
+                                .totalPages(result.getTotalPages())
+                                .hasNext(result.hasNext())
+                                .hasPrevious(result.hasPrevious())
+                                .build();
         }
 
-        return context;
-    }
-
-    private void requireAdmin() {
-        RequestContext context = requireLogin();
-
-        if (context.getAccountRole() != AccountRole.Admin) {
-            throw new BadRequestException(
-                    ErrorCode.InvalidCredentials,
-                    "Administrator access required");
+        private PollutionReport findReport(Integer id) {
+                return reportRepository.findById(id)
+                                .orElseThrow(() -> new BadRequestException(
+                                                ErrorCode.ResourceNotFound,
+                                                "Pollution report not found"));
         }
-    }
 
-    private String trimOrNull(String value) {
-        return value == null || value.isBlank()
-                ? null
-                : value.trim();
-    }
+        private PollutionReportDto toDto(PollutionReport report) {
+                PollutionReportDto dto = new PollutionReportDto(report);
+
+                String bucketUrl = report.getImageUrl();
+
+                if (bucketUrl != null && !bucketUrl.isBlank()) {
+                        String signedUrl = storageUtil.getSignedUrlFromBucketUrl(bucketUrl);
+
+                        dto.setImageUrl(trimOrNull(signedUrl));
+                }
+
+                return dto;
+        }
+
+        private RequestContext requireLogin() {
+                RequestContext context = RequestContext.get();
+
+                if (context == null
+                                || context.getAccountId() == null
+                                || context.getAccountRole() == null) {
+
+                        throw new BadRequestException(
+                                        ErrorCode.InvalidCredentials,
+                                        "Login required");
+                }
+
+                return context;
+        }
+
+        private void requireAdmin() {
+                RequestContext context = requireLogin();
+
+                if (context.getAccountRole() != AccountRole.Admin) {
+                        throw new BadRequestException(
+                                        ErrorCode.InvalidCredentials,
+                                        "Administrator access required");
+                }
+        }
+
+        private String trimOrNull(String value) {
+                return value == null || value.isBlank()
+                                ? null
+                                : value.trim();
+        }
 }
