@@ -1,6 +1,9 @@
 package com.netzerohub.pollution_report.service;
 
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.data.domain.Page;
@@ -41,6 +44,10 @@ public class PollutionReportService {
         private final RabbitTemplate rabbitTemplate;
         private final RabbitMQProperties rabbitMQProperties;
         private final IAuthClient authClient;
+
+        private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter
+                        .ofPattern("dd MMM yyyy, HH:mm '('z')'", Locale.ENGLISH)
+                        .withZone(ZoneId.of("UTC"));
 
         @Transactional
         public PollutionReportDto createReport(
@@ -136,7 +143,7 @@ public class PollutionReportService {
                                                 email,
                                                 userName,
                                                 report.getTitle(),
-                                                report.getCreatedAt().toString());
+                                                DATE_FORMATTER.format(report.getCreatedAt()));
 
                                 rabbitTemplate.convertAndSend(
                                                 rabbitMQProperties.exchange().notification(),
