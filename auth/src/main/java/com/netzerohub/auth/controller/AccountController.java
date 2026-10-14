@@ -8,6 +8,7 @@ import com.netzerohub.auth.dto.AccountDto;
 import com.netzerohub.auth.entity.Account;
 import com.netzerohub.auth.form.UpdateAccountForm;
 import com.netzerohub.auth.service.AccountService;
+import com.netzerohub.common.annotation.RequireRole;
 import com.netzerohub.common.context.RequestContext;
 
 import jakarta.validation.Valid;
@@ -40,6 +41,7 @@ public class AccountController {
         return ResponseEntity.ok(new AccountDto(account));
     }
 
+    @RequireRole({})
     @GetMapping("{id}")
     public ResponseEntity<AccountDto> getAccountById(@PathVariable("id") Integer id) {
         Account account = accountService.getAccountById(id);

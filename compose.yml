@@ -102,3 +102,17 @@ services:
     restart: unless-stopped
     depends_on:
       - config  
+
+  pollution_report:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        MODULE_ID: pollution_report
+        MODULE_LOCATION: services/pollution_report
+    container_name: NetZeroHub-PollutionReport
+    network_mode: host
+    restart: unless-stopped
+    depends_on:
+      - config
+      - discovery

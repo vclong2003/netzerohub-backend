@@ -49,6 +49,20 @@ public class RabbitMQConfig {
                 .with(rabbitMQProperties.routingKey().notification().passwordReset());
     }
 
+    // Pollution Report Update ----------------------------
+    @Bean
+    public Queue pollutionReportUpdateQueue() {
+        return new Queue(rabbitMQProperties.queue().notification().pollutionReportUpdate(), true);
+    }
+
+    @Bean
+    public Binding pollutionReportUpdateBinding(Queue pollutionReportUpdateQueue, TopicExchange exchange) {
+        return BindingBuilder
+                .bind(pollutionReportUpdateQueue)
+                .to(exchange)
+                .with(rabbitMQProperties.routingKey().notification().pollutionReportUpdate());
+    }
+
     @Bean
     public MessageConverter jsonMessageConverter() {
         return new JacksonJsonMessageConverter();

@@ -64,4 +64,27 @@ public class OneSignal {
             return null;
         }
     }
+
+    public CreateNotificationSuccessResponse sendPollutionReportUpdateEmail(String email, String userName,
+            String reportTitle, String reportDateTime) {
+        DefaultApi client = oneSignalConfig.defaultApi();
+
+        List<String> emailList = List.of(email);
+        Map<String, Object> customData = new HashMap<>();
+        customData.put("user_name", userName);
+        customData.put("report_title", reportTitle);
+        customData.put("report_datetime", reportDateTime);
+
+        Notification notification = new Notification();
+        notification.setAppId(oneSignalProperties.appId());
+        notification.setIncludeEmailTokens(emailList);
+        notification.setCustomData(customData);
+        notification.setTemplateId(oneSignalProperties.templates().pollutionReportUpdate());
+
+        try {
+            return client.createNotification(notification);
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }

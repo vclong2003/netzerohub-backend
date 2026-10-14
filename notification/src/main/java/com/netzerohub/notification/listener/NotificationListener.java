@@ -3,6 +3,7 @@ package com.netzerohub.notification.listener;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
+import com.netzerohub.notification.dto.PollutionReportUpdateEvent;
 import com.netzerohub.notification.dto.RegisterEmailEvent;
 import com.netzerohub.notification.lib.OneSignal;
 import com.onesignal.client.model.CreateNotificationSuccessResponse;
@@ -48,5 +49,23 @@ public class NotificationListener {
         }
 
         log.error("error sending forgotPwd mail");
+    }
+
+    @RabbitListener(queues = "${rabbitmq.queue.notification.pollutionReportUpdate}")
+    public void handlePollutionReportUpdateEvent(PollutionReportUpdateEvent event) {
+        log.info("---------------- pollution report update evt");
+
+        CreateNotificationSuccessResponse response = oneSignal.sendPollutionReportUpdateEmail(
+                event.getEmail(),
+                event.getUserName(),
+                event.getReportTitle(),
+                event.getReportDateTime());
+
+        if (response != null) {
+            log.info("pollution report update mail sent");
+            return;
+        }
+
+        log.error("error sending pollution report update mail");
     }
 }

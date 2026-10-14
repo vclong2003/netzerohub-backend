@@ -29,11 +29,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class AuthController {
     private final AuthService authService;
 
-    @GetMapping("")
-    public ResponseEntity<List<Account>> testGetAllAccounts() {
-        return ResponseEntity.ok(authService.getAllAccounts());
-    }
-
     @PostMapping("register")
     public ResponseEntity<Void> register(@RequestBody @Valid RegisterForm form) {
         authService.register(form);
