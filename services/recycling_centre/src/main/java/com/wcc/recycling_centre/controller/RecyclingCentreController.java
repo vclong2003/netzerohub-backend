@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.netzerohub.common.annotation.RequireRole;
 import com.netzerohub.common.dto.PageResponse;
+import com.netzerohub.common.enums.AccountRole;
 import com.wcc.recycling_centre.dto.CentreDto;
 import com.wcc.recycling_centre.dto.WasteTypeDto;
 import com.wcc.recycling_centre.entity.Centre;
@@ -75,6 +77,7 @@ public class RecyclingCentreController {
                 return ResponseEntity.ok(centreDto);
         }
 
+        @RequireRole({ AccountRole.Admin })
         @PostMapping("")
         public ResponseEntity<CentreDto> createCentre(
                         @Valid @RequestBody CreateCentreForm form) {
@@ -85,6 +88,7 @@ public class RecyclingCentreController {
                                 new CentreDto(centre));
         }
 
+        @RequireRole({ AccountRole.Admin })
         @PutMapping("/{id}")
         public ResponseEntity<CentreDto> updateCentre(
                         @PathVariable("id") Integer id,
@@ -96,6 +100,7 @@ public class RecyclingCentreController {
                                 new CentreDto(centre));
         }
 
+        @RequireRole({ AccountRole.Admin })
         @DeleteMapping("/{id}")
         public ResponseEntity<Void> deleteCentre(
                         @PathVariable("id") Integer id) {
@@ -112,6 +117,7 @@ public class RecyclingCentreController {
                                                 .map(wasteType -> new WasteTypeDto(wasteType)).toList());
         }
 
+        @RequireRole({ AccountRole.Admin })
         @PostMapping("/waste-types")
         public ResponseEntity<WasteTypeDto> createWasteType(
                         @Valid @RequestBody CreateWasteTypeForm form) {
@@ -122,6 +128,7 @@ public class RecyclingCentreController {
                                 new WasteTypeDto(wasteType));
         }
 
+        @RequireRole({ AccountRole.Admin })
         @PutMapping("/waste-types/{wasteTypeId}")
         public ResponseEntity<WasteTypeDto> updateWasteType(
                         @PathVariable("wasteTypeId") Integer wasteTypeId,
@@ -135,6 +142,7 @@ public class RecyclingCentreController {
                                 new WasteTypeDto(wasteType));
         }
 
+        @RequireRole({ AccountRole.Admin })
         @DeleteMapping("/waste-types/{wasteTypeId}")
         public ResponseEntity<Void> deleteWasteType(
                         @PathVariable("wasteTypeId") Integer wasteTypeId) {
