@@ -4,6 +4,9 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.data.domain.Page;
@@ -15,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.netzerohub.common.client.IAuthClient;
 import com.netzerohub.common.context.RequestContext;
+import com.netzerohub.common.dto.AccountDto;
 import com.netzerohub.common.dto.PageResponse;
 import com.netzerohub.common.enums.AccountRole;
 import com.netzerohub.common.enums.ErrorCode;
@@ -47,7 +51,7 @@ public class PollutionReportService {
 
         private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter
                         .ofPattern("dd MMM yyyy, HH:mm '('z')'", Locale.ENGLISH)
-                        .withZone(ZoneId.of("UTC"));
+                        .withZone(ZoneId.of("Australia/Sydney"));
 
         @Transactional
         public PollutionReportDto createReport(
@@ -133,30 +137,45 @@ public class PollutionReportService {
                                         "One or more reports were not found");
                 }
 
-                for (PollutionReport report : reports) {
-                        report.setStatus(form.getStatus());
-                        try {
-                                String email = authClient.getAccountById(report.getAccountId()).getEmail();
-                                String userName = authClient.getAccountById(report.getAccountId()).getFirstName() + " "
-                                                + authClient.getAccountById(report.getAccountId()).getLastName();
-                                PollutionReportUpdateEvent event = new PollutionReportUpdateEvent(
-                                                email,
-                                                userName,
-                                                report.getTitle(),
-                                                DATE_FORMATTER.format(report.getCreatedAt()));
+                reports.forEach(report -> report.setStatus(form.getStatus()));
+                List<PollutionReport> savedReports = reportRepository.saveAllAndFlush(reports);
 
+                // filter duplicate accounts
+                Map<Integer, AccountDto> accounts = reports.stream()
+                                .map(PollutionReport::getAccountId)
+                                .distinct()
+                                .collect(Collectors.toMap(
+                                                accountId -> accountId,
+                                                accountId -> authClient.getAccountById(accountId)));
+
+                List<PollutionReportUpdateEvent> events = reports.stream()
+                                .map(report -> {
+                                        AccountDto account = accounts.get(report.getAccountId());
+                                        if (account == null) {
+                                                log.warn("Account not found for report {}", report.getId());
+                                                return null;
+                                        }
+                                        return new PollutionReportUpdateEvent(
+                                                        account.getEmail(),
+                                                        account.getFirstName() + " " + account.getLastName(),
+                                                        report.getTitle(),
+                                                        DATE_FORMATTER.format(report.getCreatedAt()));
+                                })
+                                .filter(event -> Objects.nonNull(event))
+                                .toList();
+
+                events.forEach(event -> {
+                        try {
                                 rabbitTemplate.convertAndSend(
                                                 rabbitMQProperties.exchange().notification(),
                                                 rabbitMQProperties.routingKey().notification().pollutionReportUpdate(),
                                                 event);
-                                log.info("pollution report update evt sent");
                         } catch (Exception e) {
-                                log.error("Error sending notification", e);
+                                log.error("Error sending notification for report {}", event.getReportTitle(), e);
                         }
-                }
+                });
 
-                return reportRepository.saveAllAndFlush(reports)
-                                .stream()
+                return savedReports.stream()
                                 .map(this::toDto)
                                 .toList();
         }
@@ -236,4 +255,5 @@ public class PollutionReportService {
                                 ? null
                                 : value.trim();
         }
+
 }
