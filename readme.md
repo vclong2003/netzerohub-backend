@@ -247,3 +247,5 @@ docker compose down
 
 This does not remove the externally hosted development databases, RabbitMQ
 resources, or RustFS data.
+
+<!-- trigger build test -->
