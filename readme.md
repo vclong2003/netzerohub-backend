@@ -1,3 +1,5 @@
+<!-- trigger build test -->
+
 # NetZeroHub Backend
 
 - Deployed: <https://netzero-api.vclab.uk/swagger-ui/index.html>
@@ -247,5 +249,3 @@ docker compose down
 
 This does not remove the externally hosted development databases, RabbitMQ
 resources, or RustFS data.
-
-<!-- trigger build test -->
