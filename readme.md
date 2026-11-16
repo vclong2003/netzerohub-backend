@@ -1,3 +1,5 @@
+<!-- 6 trigger build test -->
+
 # NetZeroHub Backend
 
 - Deployed: <https://netzero-api.vclab.uk/swagger-ui/index.html>
