@@ -1,11 +1,13 @@
-<!-- 5 trigger build test -->
-
 # NetZeroHub Backend
 
-- Deployed: <https://netzero-api.vclab.uk/swagger-ui/index.html>
+A microservices practice project. NetZeroHub explores a distributed system architecture for sustainability services.
+- Web Portal Repository: [NetZeroHub Web](https://github.com/vclong2003/netzerohub-mobile)
+- Mobile App Repository: [NetZeroHub App](https://github.com/vclong2003/netzerohub-web)
 
 ## Architecture
+<img width="3690" height="2415" alt="NetZeroHub Microservices Architecture" src="https://github.com/user-attachments/assets/ecdbd32f-a95f-4d2d-b4af-5f875408547f" />
 
+### Modules
 The current backend consists of these modules:
 
 | Module                            | Purpose                                                                                                | Local port |
@@ -17,14 +19,9 @@ The current backend consists of these modules:
 | `notification`                    | Notification processing. Notifications can be sent through email/other providers.                      |     `4004` |
 | `storage`                         | File upload and URL generation through the S3-compatible object storage service.                       |     `4005` |
 | `common`                          | Shared Java code used by the other modules; it is not a separately running service.                    |          - |
-| `services/green_charging_station` | Third-party service for NRMA Green Charging Station service.                                           |     `4006` |
+| `services/green_charging_station` | Third-party service for Green Charging Station.                                                        |     `4006` |
 | `services/recycling_centre`       | Service for managing recycling centres and their associated waste types.                               |     `4007` |
 | `services/pollution_report`       | Service for managing pollution reports and their associated data.                                      |     `4008` |
-
-The development infrastructure (databases, RabbitMQ, and RustFS) is hosted on the
-development server `146.235.22.194`. The service configuration already points to
-that server, so the infrastructure does not need to be started locally for normal
-development.
 
 ### Request and authentication flow
 
@@ -43,9 +40,6 @@ development.
    request to the selected service with internal headers including
    `X-Account-Id` and `X-Account-Role`.
 5. Downstream services read this information through the shared request context.
-
-Do not send requests from the front end directly to `auth`, `notification`, or
-`storage`; use the gateway so routing and authentication remain consistent.
 
 ### Notification service
 
@@ -222,8 +216,7 @@ Config Server at `http://localhost:4000`.
 
 ## Adding a third-party service
 
-Services for integrations such as NRMA, Wollongong City Council, NSW EPA, or
-other external providers should be created as separate Spring Boot projects.
+Services for integrations should be created as separate Spring Boot projects.
 
 1. Generate a project at <https://start.spring.io/>.
 2. Select the required Spring Boot version, Java version, and dependencies.
@@ -246,6 +239,3 @@ Stop and remove the backbone containers with:
 ```bash
 docker compose down
 ```
-
-This does not remove the externally hosted development databases, RabbitMQ
-resources, or RustFS data.
