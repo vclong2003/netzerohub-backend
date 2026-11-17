@@ -50,8 +50,7 @@ RabbitMQ on the development server for asynchronous notification processing.
 ### Storage service
 
 The storage service provides endpoints for the front end to upload files and
-obtain signed URLs. It uses the S3-compatible storage endpoint provided by RustFS
-on the development server. The current upload limits are 25 MB per file and
+obtain signed URLs. The current upload limits are 25 MB per file and
 50 MB per request.
 
 ## Repository layout
@@ -96,13 +95,6 @@ conventions:
 - `application.properties` contains configuration shared by all services.
 - `<service-name>.properties` contains configuration for one service, for
   example `auth.properties` or `storage.properties`.
-
-For the current development setup, the configurations point
-to the external development infrastructure, so you normally do not need to
-create or edit a `.env` file. `.env.example` documents variables used only by
-the optional local infrastructure compose file.
-
-Don't commit these configured keys to github :((
 
 ## Starting the backbone services
 
