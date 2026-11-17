@@ -1,8 +1,8 @@
 # NetZeroHub Backend
 
 A microservices practice project. NetZeroHub explores a distributed system architecture for sustainability services.
-- Web Portal Repository: [NetZeroHub Web](https://github.com/vclong2003/netzerohub-mobile)
-- Mobile App Repository: [NetZeroHub App](https://github.com/vclong2003/netzerohub-web)
+- Web Portal Repository: [NetZeroHub Web](https://github.com/vclong2003/netzerohub-web)
+- Mobile App Repository: [NetZeroHub App](https://github.com/vclong2003/netzerohub-mobile)
 
 ## Architecture
 <img width="3690" height="2415" alt="NetZeroHub Microservices Architecture" src="https://github.com/user-attachments/assets/ecdbd32f-a95f-4d2d-b4af-5f875408547f" />
